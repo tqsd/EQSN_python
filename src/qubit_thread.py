@@ -2,7 +2,7 @@ import numpy as np
 
 NONE = 0
 SINGLE_GATE = 1
-DOUBLE_GATE = 2
+CONTROLLED_GATE = 2
 MEASURE = 3
 MERGE_ACCEPT = 4
 MERGE_SEND = 5
@@ -33,15 +33,58 @@ class QubitThread(object):
         if after > 0:
             apply_mat = np.kron(apply_mat, np.eye(2**after))
         self.qubit = np.dot(apply_mat, self.qubit)
-        print("Single gate called")
+
+    def apply_controlled_gate(self, mat, id1, id2):
+        first_mat = 1
+        second_mat = 1
+        nr1 = self.qubits.index(id1)
+        nr2 = self.qubits.index(id2)
+        min_nr = min(nr1, nr2)
+        max_nr = max(nr1, nr2)
+        if min_nr == nr1:
+            # first_mat = mat
+            pass
+        total_amount = len(self.qubits)
+        before = min_nr
+        after = total_amount - max_nr -1
+        mid = total_amount - before - after - 2
+        if before > 0:
+            first_mat = np.eye(2**before)
+            second_mat = np.eye(2**before)
+        # Apply first part of Matrix
+        if min_nr == nr1:
+            first_mat = np.kron(firt_mat, np.eye(2))
+            second_mat = np.kron(second_mat, mat)
+        else:
+            first_mat = np.kron(first_mat, np.array([[1,0],[0,0]]))
+            second_mat = np.kron(second_mat, np.array([[0,0],[0,1]]))
+
+        if mid > 0:
+            first_mat = np.kron(first_mat, np.eye(2**mid))
+            second_mat = np.kron(second_mat, np.eye(2**mid))
+        # Apply second part of Matrix
+        if min_nr == nr1:
+            first_mat = np.kron(first_mat, np.array([[1,0],[0,0]]))
+            second_mat = np.kron(second_mat, np.array([[0,0],[0,1]]))
+        else:
+            first_mat = np.kron(first_mat, np.eye(2))
+            second_mat = np.kron(second_mat, mat)
+
+        if after > 0:
+            first_mat = np.kron(first_mat, np.eye(2**after))
+            second_mat = np.kron(second_mat, np.eye(2**after))
+        apply_mat = first_mat + second_mat
+        self.qubit = np.dot(apply_mat, self.qubit)
 
     def merge_accept(self, channel):
         ids, vector = channel.get()
-        self.qubits += ids
+        channel.put(None)
+        self.qubits = self.qubits + ids
         self.qubit = np.kron(self.qubit, vector)
 
     def merge_send(self, channel):
         channel.put((self.qubits, self.qubit))
+        _  = channel.get() # For sync reasons
         return
 
     def measure(self, id, ret_channel):
@@ -89,16 +132,19 @@ class QubitThread(object):
                 return
             elif item[0] == SINGLE_GATE:
                 self.apply_single_gate(item[1], item[2])
-            elif item[0] == DOUBLE_GATE:
-                pass
+            elif item[0] == CONTROLLED_GATE:
+                self.apply_controlled_gate(item[1], item[2], item[3])
             elif item[0] == MEASURE:
                 self.measure(item[1], item[2])
                 # no qubit left, terminate
                 if len(self.qubits) == 0:
                     return
             elif item[0] == MERGE_ACCEPT:
-                pass
+                print("receive data from other qubit")
+                self.merge_accept(item[1])
             elif item[0] == MERGE_SEND:
-                pass
+                print("send data to other qubit")
+                self.merge_send(item[1])
+                return
             else:
                 raise ValueError("Command does not exist!")

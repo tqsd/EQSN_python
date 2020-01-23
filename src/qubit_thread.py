@@ -1,4 +1,5 @@
 import numpy as np
+from copy import deepcopy as dp
 
 NONE = 0
 SINGLE_GATE = 1
@@ -77,14 +78,14 @@ class QubitThread(object):
         self.qubit = np.dot(apply_mat, self.qubit)
 
     def merge_accept(self, channel):
-        ids, vector = channel.get()
-        channel.put(None)
+        ids = channel.get()
+        vector = channel.get()
         self.qubits = self.qubits + ids
         self.qubit = np.kron(self.qubit, vector)
 
     def merge_send(self, channel):
-        channel.put((self.qubits, self.qubit))
-        _  = channel.get() # For sync reasons
+        channel.put(dp(self.qubits))
+        channel.put(dp(self.qubit))
         return
 
     def measure(self, id, ret_channel):
@@ -140,10 +141,8 @@ class QubitThread(object):
                 if len(self.qubits) == 0:
                     return
             elif item[0] == MERGE_ACCEPT:
-                print("receive data from other qubit")
                 self.merge_accept(item[1])
             elif item[0] == MERGE_SEND:
-                print("send data to other qubit")
                 self.merge_send(item[1])
                 return
             else:

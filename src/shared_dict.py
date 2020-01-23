@@ -65,6 +65,7 @@ class ReadWriteLock:
 id_to_queue = {}
 lock = ReadWriteLock()
 
+id_to_thread = {}
 thread_list = []
 queue_list = []
 
@@ -79,12 +80,55 @@ def get_threads_for_ids(q_id_list):
     lock.release_read()
     return ret
 
+
 def set_thread_with_id(q_id, thread, queue):
     lock.acquire_write()
     id_to_queue[q_id] = queue
+    id_to_thread[q_id] = thread
     queue_list.append(queue)
     thread_list.append(thread)
     lock.release_write()
+
+def delete_id(q_id):
+    lock.acquire_write()
+    del id_to_queue[q_id]
+    del id_to_thread[q_id]
+    lock.release_write()
+
+def delete_id_and_check_to_join_thread(q_id):
+    lock.acquire_read()
+    thread = id_to_thread[q_id]
+    lock.release_read()
+    if not thread.is_alive():
+        thread.join()
+        lock.acquire_write()
+        thread_list.remove(thread)
+    else:
+        lock.acquire_write()
+    del id_to_thread[q_id]
+    del id_to_queue[q_id]
+    lock.release_write()
+
+def join_thread_with_id(q_id):
+    lock.acquire_read()
+    thread = id_to_thread[q_id]
+    lock.release_read()
+    thread.join()
+    lock.acquire_write()
+    thread_list.remove(thread)
+    del id_to_thread[q_id]
+    lock.release_write()
+
+def change_thread_of_id_and_join(q_id, q_id_new_thread):
+    lock.acquire_read()
+    thread = id_to_thread[q_id]
+    new_thread = id_to_thread[q_id_new_thread]
+    lock.release_read()
+    lock.acquire_write()
+    thread_list.remove(thread)
+    id_to_thread[q_id] = new_thread
+    lock.release_write()
+    thread.join()
 
 def change_ids_queue(q_id, queue):
     lock.acquire_write()

@@ -1,8 +1,10 @@
 import multiprocessing
 import numpy as np
+import time
 from qubit_thread import *
 from shared_dict import get_threads_for_ids, set_thread_with_id, \
-                        send_all_threads, stop_all_threads, change_ids_queue
+                        send_all_threads, stop_all_threads, change_ids_queue,\
+                        change_thread_of_id_and_join, delete_id_and_check_to_join_thread
 
 manager = multiprocessing.Manager()
 def new_qubit(id):
@@ -54,14 +56,13 @@ def merge_qubits(q_id1, q_id2):
     if len(l) == 1:
         return # Already merged
     else:
-        print("has to be merged")
         q1 = l[0]
         q2 = l[1]
         merge_q = manager.Queue()
         q1.put([MERGE_SEND, merge_q])
         q2.put([MERGE_ACCEPT, merge_q])
         change_ids_queue(q_id1, q2)
-        print("Merged successfull!")
+        change_thread_of_id_and_join(q_id1, q_id2)
 
 
 def cnot_gate(q_id1, q_id2):
@@ -80,4 +81,5 @@ def measure(id):
     q = get_threads_for_ids([id])[0]
     q.put([MEASURE, id, ret])
     res = ret.get()
+    delete_id_and_check_to_join_thread(id)
     return res

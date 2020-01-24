@@ -1,8 +1,8 @@
 import multiprocessing
 import numpy as np
 import time
-from qubit_thread import *
-from shared_dict import get_threads_for_ids, set_thread_with_id, \
+from eqsn.qubit_thread import *
+from eqsn.shared_dict import get_threads_for_ids, set_thread_with_id, \
                         send_all_threads, stop_all_threads, change_ids_queue,\
                         change_thread_of_id_and_join, delete_id_and_check_to_join_thread
 

@@ -1,6 +1,6 @@
 import sys
 
-sys.path.append("../src/")
+sys.path.append("../eqsn/")
 from gates import *
 
 def test_merge():

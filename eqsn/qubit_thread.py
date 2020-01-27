@@ -7,6 +7,7 @@ CONTROLLED_GATE = 2
 MEASURE = 3
 MERGE_ACCEPT = 4
 MERGE_SEND = 5
+GIVE_QUBITS_AND_TERMINATE = 6
 
 class QubitThread(object):
 
@@ -88,6 +89,10 @@ class QubitThread(object):
         channel.put(dp(self.qubit))
         return
 
+    def send_qubits(self, channel):
+        channel.put(dp(self.qubits))
+        return
+
     def measure(self, id, ret_channel):
         # determine probability for |1>
         measure_vec = np.array([1,0], dtype=np.csingle)
@@ -127,12 +132,14 @@ class QubitThread(object):
 
 
     def run(self):
+        amount_single_gate = 0
         while True:
             item = self.queue.get()
             if item is None:
                 return
             elif item[0] == SINGLE_GATE:
                 self.apply_single_gate(item[1], item[2])
+                amount_single_gate += 1
             elif item[0] == CONTROLLED_GATE:
                 self.apply_controlled_gate(item[1], item[2], item[3])
             elif item[0] == MEASURE:
@@ -144,6 +151,8 @@ class QubitThread(object):
                 self.merge_accept(item[1])
             elif item[0] == MERGE_SEND:
                 self.merge_send(item[1])
+            elif item[0] == GIVE_QUBITS_AND_TERMINATE:
+                self.send_qubits(item[1])
                 return
             else:
                 raise ValueError("Command does not exist!")

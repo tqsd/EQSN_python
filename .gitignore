@@ -1,2 +1,4 @@
 src/__pycache__/
 eqsn/__pycache__/
+venv/
+reinstall_eqsn.sh

@@ -70,7 +70,7 @@ thread_list = []
 queue_list = []
 
 
-def get_threads_for_ids(q_id_list):
+def get_queues_for_ids(q_id_list):
     ret = []
     lock.acquire_read()
     for id in q_id_list:
@@ -118,20 +118,17 @@ def join_thread_with_id(q_id):
     del id_to_thread[q_id]
     lock.release_write()
 
-def change_thread_of_id_and_join(q_id, q_id_new_thread):
-    lock.acquire_read()
-    thread = id_to_thread[q_id]
+def change_thread_and_queue_of_ids_and_join(q_ids, q_id_new_thread):
+    lock.acquire_write()
     new_thread = id_to_thread[q_id_new_thread]
-    lock.release_read()
-    lock.acquire_write()
-    thread_list.remove(thread)
-    id_to_thread[q_id] = new_thread
-    lock.release_write()
-    thread.join()
-
-def change_ids_queue(q_id, queue):
-    lock.acquire_write()
-    id_to_queue[q_id] = queue
+    new_queue = id_to_queue[q_id_new_thread]
+    for q_id in q_ids:
+        thread = id_to_thread[q_id]
+        if thread in thread_list:
+            thread_list.remove(thread)
+            thread.join()
+        id_to_thread[q_id] = new_thread
+        id_to_queue[q_id] = new_queue
     lock.release_write()
 
 def send_all_threads(msg):

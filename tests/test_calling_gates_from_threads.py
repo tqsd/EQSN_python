@@ -11,8 +11,8 @@ def test_call_single_qubit_gate_from_threads():
             X_gate(id)
     id1 = str(1)
     new_qubit(id1)
-    n = 99
-    nr_threads = 3
+    n = 999
+    nr_threads = 5
     thread_list = []
     for _ in range(nr_threads):
         t = threading.Thread(target=call_X_gate_n_times, args=(id1, n))

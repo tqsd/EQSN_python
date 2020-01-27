@@ -96,17 +96,16 @@ def delete_id(q_id):
     lock.release_write()
 
 def delete_id_and_check_to_join_thread(q_id):
-    lock.acquire_read()
-    thread = id_to_thread[q_id]
-    lock.release_read()
-    if not thread.is_alive():
-        thread.join()
-        lock.acquire_write()
-        thread_list.remove(thread)
-    else:
-        lock.acquire_write()
-    del id_to_thread[q_id]
-    del id_to_queue[q_id]
+    lock.acquire_write()
+    thread = None
+    if q_id in id_to_thread.keys():
+        thread = id_to_thread[q_id]
+        if not thread.is_alive():
+            thread.join()
+            if thread in thread_list:
+                thread_list.remove(thread)
+        del id_to_thread[q_id]
+        del id_to_queue[q_id]
     lock.release_write()
 
 def join_thread_with_id(q_id):

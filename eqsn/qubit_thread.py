@@ -1,5 +1,6 @@
 import numpy as np
 from copy import deepcopy as dp
+import random
 
 NONE = 0
 SINGLE_GATE = 1
@@ -13,6 +14,10 @@ class QubitThread(object):
 
 
     def __init__(self, q_id, queue):
+        # set new seed for random number generator
+        local_random = random.Random()
+        new_seed = local_random.randrange(1, 100000)
+        np.random.seed(new_seed)
 
         # List of qubits in this thread
         self.qubits = [q_id]

@@ -9,6 +9,7 @@ MEASURE = 3
 MERGE_ACCEPT = 4
 MERGE_SEND = 5
 GIVE_QUBITS_AND_TERMINATE = 6
+MEASURE_NON_DESTRUCTIVE = 7
 
 class QubitThread(object):
 
@@ -98,6 +99,39 @@ class QubitThread(object):
         channel.put(dp(self.qubits))
         return
 
+    def measure_non_destructive(self, id, ret_channel):
+        # determine probability for |1>
+        measure_vec = np.array([1,0], dtype=np.csingle)
+        nr = self.qubits.index(id)
+        total_amount = len(self.qubits)
+        before = nr
+        after = total_amount - nr -1
+        if before > 0:
+            measure_vec = np.kron(np.ones(2**before), measure_vec)
+        if after > 0:
+            measure_vec = np.kron(measure_vec, np.ones(2**after))
+        pr_0 = np.multiply(measure_vec, self.qubit)
+        pr_0 = np.dot(pr_0, pr_0)
+        meas_res = np.random.binomial(1, 1.0 - pr_0.real)
+        reduction_mat = None
+        if meas_res == 0:
+            # |0> has been measured
+            ret_channel.put(0)
+            reduction_mat = np.array([[1,0],[0,0]], dtype=np.csingle)
+        else:
+            # |1> has been measured
+            ret_channel.put(1)
+            reduction_mat = np.array([[0,0],[0,1]], dtype=np.csingle)
+        if before > 0:
+            reduction_mat = np.kron(np.eye(2**before, dtype=np.csingle), reduction_mat)
+        if after > 0:
+            reduction_mat = np.kron(reduction_mat, np.eye(2**after, dtype=np.csingle))
+        # apply measurement result to state vector
+        self.qubit = np.dot(reduction_mat, self.qubit)
+        # renormalize the qubit vector
+        norm = np.linalg.norm(self.qubit)
+        self.qubit = self.qubit/norm
+
     def measure(self, id, ret_channel):
         # determine probability for |1>
         measure_vec = np.array([1,0], dtype=np.csingle)
@@ -135,7 +169,6 @@ class QubitThread(object):
         norm = np.linalg.norm(self.qubit)
         self.qubit = self.qubit/norm
 
-
     def run(self):
         amount_single_gate = 0
         while True:
@@ -159,5 +192,7 @@ class QubitThread(object):
             elif item[0] == GIVE_QUBITS_AND_TERMINATE:
                 self.send_qubits(item[1])
                 return
+            elif item[0] == MEASURE_NON_DESTRUCTIVE:
+                self.measure_non_destructive(item[1], item[2])
             else:
                 raise ValueError("Command does not exist!")

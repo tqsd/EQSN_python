@@ -126,10 +126,14 @@ def cphase_gate(q_id1, q_id2):
     q.put([CONTROLLED_GATE, x, q_id1, q_id2])
 
 
-def measure(id):
+def measure(id, non_destructive=False):
     ret = manager.Queue()
     q = get_queues_for_ids([id])[0]
-    q.put([MEASURE, id, ret])
+    if non_destructive:
+        q.put([MEASURE_NON_DESTRUCTIVE, id, ret])
+    else:
+        q.put([MEASURE, id, ret])
     res = ret.get()
-    delete_id_and_check_to_join_thread(id)
+    if not non_destructive:
+        delete_id_and_check_to_join_thread(id)
     return res

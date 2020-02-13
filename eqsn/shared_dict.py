@@ -18,8 +18,10 @@ class ReadWriteLock:
         self._writerList = []  # List of Writer thread IDs
 
     def acquire_read(self):
-        """ Acquire a read lock. Blocks only if a thread has
-        acquired the write lock. """
+        """
+        Acquire a read lock. Blocks only if a thread has
+        acquired the write lock.
+        """
         self._read_ready.acquire()
         try:
             while self._writers > 0:
@@ -30,7 +32,9 @@ class ReadWriteLock:
             self._read_ready.release()
 
     def release_read(self):
-        """ Release a read lock. """
+        """
+        Release a read lock.
+        """
         self._read_ready.acquire()
         try:
             self._readers -= 1
@@ -41,8 +45,10 @@ class ReadWriteLock:
             self._read_ready.release()
 
     def acquire_write(self):
-        """ Acquire a write lock. Blocks until there are no
-        acquired read or write locks. """
+        """
+        Acquire a write lock. Blocks until there are no
+        acquired read or write locks.
+        """
         self._read_ready.acquire()
         self._writers += 1
         self._writerList.append(threading.get_ident())
@@ -53,7 +59,9 @@ class ReadWriteLock:
                 self._read_ready.wait()
 
     def release_write(self):
-        """ Release a write lock. """
+        """
+        Release a write lock.
+        """
         self._writers -= 1
         self._writerList.remove(threading.get_ident())
         self._read_ready.notifyAll()

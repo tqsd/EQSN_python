@@ -8,6 +8,9 @@ from eqsn.shared_dict import get_queues_for_ids, set_thread_with_id, \
 
 manager = multiprocessing.Manager()
 def new_qubit(id):
+    """
+    Creates a new qubit with an id.
+    """
     q = multiprocessing.Queue()
     thread = QubitThread(id, q)
     p = multiprocessing.Process(target=thread.run, args=())
@@ -15,6 +18,9 @@ def new_qubit(id):
     p.start()
 
 def stop_all():
+    """
+    Stops the simulator from running.
+    """
     send_all_threads(None)
     stop_all_threads()
 
@@ -89,6 +95,10 @@ def RZ_gate(q_id, rad):
     q.put([SINGLE_GATE, x, q_id])
 
 def merge_qubits(q_id1, q_id2):
+    """
+    Merges two qubits to one process, if they are not already
+    running in the same process.
+    """
     l = get_queues_for_ids([q_id1, q_id2])
     if len(l) == 1:
         return # Already merged
@@ -127,6 +137,11 @@ def cphase_gate(q_id1, q_id2):
 
 
 def measure(id, non_destructive=False):
+    """
+    Measures a qubit with an id. If non_destructive is False, the qubit
+    is removed from the system, otherwise, the qubit stays in the system after
+    measurement, but its wavefunction collapses.
+    """
     ret = manager.Queue()
     q = get_queues_for_ids([id])[0]
     if non_destructive:

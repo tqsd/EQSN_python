@@ -15,6 +15,11 @@ class QubitThread(object):
 
 
     def __init__(self, q_id, queue):
+        """
+        Args:
+            q_id (String): Name of the qubit
+            queue (Queue): Queue for receiving commands from main thread.
+        """
         # set new seed for random number generator
         local_random = random.Random()
         new_seed = local_random.randrange(1, 100000)
@@ -31,6 +36,13 @@ class QubitThread(object):
         self.qubit[0] = 1
 
     def apply_single_gate(self, mat, id):
+        """
+        Applys a single gate to a qubit.
+
+        Args:
+            mat (np.array): 2x2 unitary array.
+            id (String): Qubit on which the gate should be applied to.
+        """
         apply_mat = mat
         nr = self.qubits.index(id)
         total_amount = len(self.qubits)
@@ -43,6 +55,9 @@ class QubitThread(object):
         self.qubit = np.dot(apply_mat, self.qubit)
 
     def apply_controlled_gate(self, mat, id1, id2):
+        """
+        Apply a controlled gate to
+        """
         first_mat = 1
         second_mat = 1
         nr1 = self.qubits.index(id1)
@@ -85,21 +100,33 @@ class QubitThread(object):
         self.qubit = np.dot(apply_mat, self.qubit)
 
     def merge_accept(self, channel):
+        """
+        Receive another process to merge it with this one.
+        """
         ids = channel.get()
         vector = channel.get()
         self.qubits = self.qubits + ids
         self.qubit = np.kron(self.qubit, vector)
 
     def merge_send(self, channel):
+        """
+        Send own process data to another process and suicide.
+        """
         channel.put(dp(self.qubits))
         channel.put(dp(self.qubit))
         return
 
     def send_qubits(self, channel):
+        """
+        Send which qubits are in this process over a channel.
+        """
         channel.put(dp(self.qubits))
         return
 
     def measure_non_destructive(self, id, ret_channel):
+        """
+        Perform a non destructive measurement on qubit with the id.
+        """
         # determine probability for |1>
         measure_vec = np.array([1,0], dtype=np.csingle)
         nr = self.qubits.index(id)
@@ -133,6 +160,9 @@ class QubitThread(object):
         self.qubit = self.qubit/norm
 
     def measure(self, id, ret_channel):
+        """
+        Perform a destructive measurement on qubit with the id.
+        """
         # determine probability for |1>
         measure_vec = np.array([1,0], dtype=np.csingle)
         nr = self.qubits.index(id)
@@ -170,6 +200,9 @@ class QubitThread(object):
         self.qubit = self.qubit/norm
 
     def run(self):
+        """
+        Run in loop and wait to receive tasks to perform.
+        """
         amount_single_gate = 0
         while True:
             item = self.queue.get()

@@ -5,15 +5,17 @@ import time
 
 from eqsn import *
 
+
 def test_measure_from_threads():
     def measure_or_hadamard(id):
-        n = random.randrange(10,100,1)
+        n = random.randrange(10, 100, 1)
         for _ in range(n):
             time.sleep(0.1)
             H_gate(id)
         print("Finished Hadamard, measure qubit %s!" % id)
         print(measure(id))
         print("Finished with Measure!")
+
     nr_threads = 10
     ids = [str(x) for x in range(nr_threads)]
     for id in ids:

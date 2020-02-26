@@ -4,11 +4,13 @@ import threading
 sys.path.append("../eqsn/")
 from gates import new_qubit, cnot_gate, H_gate, X_gate, stop_all, measure
 
+
 def test_call_single_qubit_gate_from_threads():
     def call_X_gate_n_times(id, n):
         for c in range(n):
             # print("Apply %d time." % c)
             X_gate(id)
+
     id1 = str(1)
     new_qubit(id1)
     n = 999

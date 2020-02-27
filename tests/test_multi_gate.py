@@ -3,6 +3,7 @@ import sys
 sys.path.append("../eqsn/")
 from gates import new_qubit, cnot_gate, H_gate, stop_all, measure
 
+
 def test_epr_creation():
     id1 = str(1)
     id2 = str(2)
@@ -16,6 +17,7 @@ def test_epr_creation():
     assert m1 == m2
     print("Test was successfull!")
     stop_all()
+
 
 def test_5_qubits_gate():
     ids = [str(x) for x in range(5)]
@@ -31,6 +33,7 @@ def test_5_qubits_gate():
         m = measure(i)
         print("Qubit %s was %d." % (i, m))
     stop_all()
+
 
 test_epr_creation()
 test_5_qubits_gate()

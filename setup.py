@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='EQSN',
-    version='0.0.1',
+    version='0.0.1.post1',
     packages=['eqsn',],
     license='MIT',
     author='Benjamin Zanger',
@@ -14,11 +14,10 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url = 'https://github.com/tqsd/EQSN_python',
-    download_url = '',
+    download_url = 'https://github.com/tqsd/EQSN_python/releases/tag/v0.0.1',
     keywords = ['quantum-simulator', 'quantum-internet', 'QuNetSim'],
     install_requires=[
         'numpy',
-        'multiprocessing',
       ],
     classifiers=[
         'Development Status :: 3 - Alpha',

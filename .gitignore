@@ -3,3 +3,5 @@ eqsn/__pycache__/
 venv/
 reinstall_eqsn.sh
 .idea/
+dist/
+EQSN.egg-info/

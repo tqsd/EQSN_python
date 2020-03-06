@@ -1,9 +1,9 @@
 import multiprocessing
 import numpy as np
-from qubit_thread import SINGLE_GATE, MERGE_SEND, MERGE_ACCEPT, MEASURE,\
+from eqsn.qubit_thread import SINGLE_GATE, MERGE_SEND, MERGE_ACCEPT, MEASURE,\
                 MEASURE_NON_DESTRUCTIVE, GIVE_QUBITS_AND_TERMINATE, \
                 CONTROLLED_GATE, QubitThread
-from shared_dict import get_queues_for_ids, set_thread_with_id, \
+from eqsn.shared_dict import get_queues_for_ids, set_thread_with_id, \
     send_all_threads, stop_all_threads, \
     change_thread_and_queue_of_ids_and_join, delete_id_and_check_to_join_thread
 

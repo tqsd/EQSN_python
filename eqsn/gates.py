@@ -1,6 +1,9 @@
 import multiprocessing
-from eqsn.qubit_thread import *
-from eqsn.shared_dict import get_queues_for_ids, set_thread_with_id, \
+import numpy as np
+from qubit_thread import SINGLE_GATE, MERGE_SEND, MERGE_ACCEPT, MEASURE,\
+                MEASURE_NON_DESTRUCTIVE, GIVE_QUBITS_AND_TERMINATE, \
+                CONTROLLED_GATE, QubitThread
+from shared_dict import get_queues_for_ids, set_thread_with_id, \
     send_all_threads, stop_all_threads, \
     change_thread_and_queue_of_ids_and_join, delete_id_and_check_to_join_thread
 
@@ -67,6 +70,24 @@ def T_gate(q_id):
     Applies the T gate to the Qubit with q_id.
     """
     x = np.array([[1, 0], [0, (0.7071067811865476 + 0.7071067811865475j)]], dtype=np.csingle)
+    q = get_queues_for_ids([q_id])[0]
+    q.put([SINGLE_GATE, x, q_id])
+
+
+def S_gate(q_id):
+    """
+    Applies the S gate to the Qubit with q_id.
+    """
+    x = np.array([[1, 0], [0, 1j]], dtype=np.csingle)
+    q = get_queues_for_ids([q_id])[0]
+    q.put([SINGLE_GATE, x, q_id])
+
+
+def K_gate(q_id):
+    """
+    Applies the K gate to the Qubit with q_id.
+    """
+    x = 0.5 * np.array([[1+1j, 1-1j], [-1+1j, -1-1j]], dtype=np.csingle)
     q = get_queues_for_ids([q_id])[0]
     q.put([SINGLE_GATE, x, q_id])
 

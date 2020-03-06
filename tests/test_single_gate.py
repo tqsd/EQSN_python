@@ -1,7 +1,5 @@
 import sys
-
-sys.path.append("../eqsn/")
-from gates import *
+from eqsn import *
 
 
 def test_x_gate():
@@ -64,6 +62,33 @@ def test_T_gate():
     stop_all()
 
 
+def test_S_gate():
+    id = str(11)
+    new_qubit(id)
+    H_gate(id)
+    S_gate(id)
+    S_gate(id)
+    H_gate(id)
+    res = measure(id)
+    print("measured %d." % res)
+    assert res == 1
+    stop_all()
+
+
+def test_K_gate():
+    print("test K gate.")
+    id = str(11)
+    new_qubit(id)
+    H_gate(id)
+    K_gate(id)
+    K_gate(id)
+    H_gate(id)
+    res = measure(id)
+    print("measured %d." % res)
+    assert res == 0
+    stop_all()
+
+
 def test_measure():
     id = str(10)
     new_qubit(id)
@@ -72,9 +97,12 @@ def test_measure():
     stop_all()
 
 
-test_x_gate()
-test_y_gate()
-test_z_gate()
-test_H_gate()
-test_T_gate()
-test_measure()
+if __name__=="__main__":
+    test_x_gate()
+    test_y_gate()
+    test_z_gate()
+    test_H_gate()
+    test_T_gate()
+    test_S_gate()
+    test_K_gate()
+    test_measure()

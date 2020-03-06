@@ -1,6 +1,7 @@
 import numpy as np
 from copy import deepcopy as dp
 import random
+import sys
 
 NONE = 0
 SINGLE_GATE = 1
@@ -138,8 +139,8 @@ class QubitThread(object):
         if after > 0:
             measure_vec = np.kron(measure_vec, np.ones(2 ** after))
         pr_0 = np.multiply(measure_vec, self.qubit)
-        pr_0 = np.dot(pr_0, pr_0)
-        meas_res = np.random.binomial(1, 1.0 - pr_0.real)
+        pr_0 = abs(np.dot(pr_0, pr_0).real)
+        meas_res = np.random.binomial(1, 1.0 - pr_0)
         reduction_mat = None
         if meas_res == 0:
             # |0> has been measured
@@ -174,8 +175,8 @@ class QubitThread(object):
         if after > 0:
             measure_vec = np.kron(measure_vec, np.ones(2 ** after))
         pr_0 = np.multiply(measure_vec, self.qubit)
-        pr_0 = np.dot(pr_0, pr_0)
-        meas_res = np.random.binomial(1, 1.0 - pr_0.real)
+        pr_0 = abs(np.dot(pr_0, pr_0).real)
+        meas_res = np.random.binomial(1, 1.0 - pr_0)
         reduction_mat = None
         if meas_res == 0:
             # |0> has been measured
@@ -214,6 +215,8 @@ class QubitThread(object):
             elif item[0] == CONTROLLED_GATE:
                 self.apply_controlled_gate(item[1], item[2], item[3])
             elif item[0] == MEASURE:
+                print("Measure called")
+                sys.stdout.flush()
                 self.measure(item[1], item[2])
                 # no qubit left, terminate
                 if len(self.qubits) == 0:

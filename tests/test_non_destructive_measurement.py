@@ -1,8 +1,4 @@
-import sys
-import threading
-
-sys.path.append("../eqsn/")
-from gates import new_qubit, cnot_gate, H_gate, X_gate, stop_all, measure
+from eqsn import new_qubit, H_gate, measure, stop_all
 
 
 def test_non_destructive_measurement():
@@ -17,4 +13,5 @@ def test_non_destructive_measurement():
     stop_all()
 
 
-test_non_destructive_measurement()
+if __name__ == "__main__":
+    test_non_destructive_measurement()

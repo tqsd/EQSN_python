@@ -1,7 +1,6 @@
 import sys
 
-sys.path.append("../eqsn/")
-from gates import new_qubit, cnot_gate, H_gate, stop_all, measure
+from eqsn import *
 
 
 def test_epr_creation():

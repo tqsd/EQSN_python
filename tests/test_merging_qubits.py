@@ -1,7 +1,5 @@
-import sys
-
-sys.path.append("../eqsn/")
-from gates import *
+from eqsn import new_qubit, stop_all
+from eqsn.gates import merge_qubits
 
 
 def test_merge():
@@ -13,4 +11,5 @@ def test_merge():
     stop_all()
 
 
-test_merge()
+if __name__ == "__main__":
+    test_merge()

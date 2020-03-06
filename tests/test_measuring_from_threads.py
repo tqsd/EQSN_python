@@ -1,4 +1,3 @@
-import sys
 import threading
 import random
 import time
@@ -35,4 +34,5 @@ def test_measure_from_threads():
     stop_all()
 
 
-test_measure_from_threads()
+if __name__ == "__main__":
+    test_measure_from_threads()

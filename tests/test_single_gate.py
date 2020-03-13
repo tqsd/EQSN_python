@@ -1,100 +1,108 @@
 import sys
-from eqsn import *
+from eqsn import EQSN
 
 
 def test_x_gate():
+    q_sim = EQSN()
     id = str(10)
-    new_qubit(id)
-    X_gate(id)
-    res = measure(id)
+    q_sim.new_qubit(id)
+    q_sim.X_gate(id)
+    res = q_sim.measure(id)
     assert res == 1
-    stop_all()
+    q_sim.stop_all()
 
 
 def test_y_gate():
+    q_sim = EQSN()
     id = str(10)
-    new_qubit(id)
-    Y_gate(id)
-    Y_gate(id)
-    res = measure(id)
+    q_sim.new_qubit(id)
+    q_sim.Y_gate(id)
+    q_sim.Y_gate(id)
+    res = q_sim.measure(id)
     assert res == 0
-    stop_all()
+    q_sim.stop_all()
 
 
 def test_z_gate():
+    q_sim = EQSN()
     id = str(10)
-    new_qubit(id)
-    Z_gate(id)
-    Z_gate(id)
-    res = measure(id)
+    q_sim.new_qubit(id)
+    q_sim.Z_gate(id)
+    q_sim.Z_gate(id)
+    res = q_sim.measure(id)
     assert res == 0
-    stop_all()
+    q_sim.stop_all()
 
 
 def test_H_gate():
+    q_sim = EQSN()
     id = str(10)
-    new_qubit(id)
-    H_gate(id)
-    H_gate(id)
-    res = measure(id)
+    q_sim.new_qubit(id)
+    q_sim.H_gate(id)
+    q_sim.H_gate(id)
+    res = q_sim.measure(id)
     assert res == 0
-    stop_all()
+    q_sim.stop_all()
 
 
 def test_T_gate():
+    q_sim = EQSN()
     id = str(10)
-    new_qubit(id)
-    T_gate(id)
-    res = measure(id)
+    q_sim.new_qubit(id)
+    q_sim.T_gate(id)
+    res = q_sim.measure(id)
     print("measured %d." % res)
     assert res == 0
     id = str(11)
-    new_qubit(id)
-    H_gate(id)
-    T_gate(id)
-    T_gate(id)
-    T_gate(id)
-    T_gate(id)
-    H_gate(id)
-    res = measure(id)
+    q_sim.new_qubit(id)
+    q_sim.H_gate(id)
+    q_sim.T_gate(id)
+    q_sim.T_gate(id)
+    q_sim.T_gate(id)
+    q_sim.T_gate(id)
+    q_sim.H_gate(id)
+    res = q_sim.measure(id)
     print("measured %d." % res)
     assert res == 1
-    stop_all()
+    q_sim.stop_all()
 
 
 def test_S_gate():
+    q_sim = EQSN()
     id = str(11)
-    new_qubit(id)
-    H_gate(id)
-    S_gate(id)
-    S_gate(id)
-    H_gate(id)
-    res = measure(id)
+    q_sim.new_qubit(id)
+    q_sim.H_gate(id)
+    q_sim.S_gate(id)
+    q_sim.S_gate(id)
+    q_sim.H_gate(id)
+    res = q_sim.measure(id)
     print("measured %d." % res)
     assert res == 1
-    stop_all()
+    q_sim.stop_all()
 
 
 def test_K_gate():
+    q_sim = EQSN()
     print("test K gate.")
     id = str(11)
-    new_qubit(id)
-    H_gate(id)
-    K_gate(id)
-    K_gate(id)
-    H_gate(id)
-    res = measure(id)
+    q_sim.new_qubit(id)
+    q_sim.H_gate(id)
+    q_sim.K_gate(id)
+    q_sim.K_gate(id)
+    q_sim.H_gate(id)
+    res = q_sim.measure(id)
     print("measured %d." % res)
     assert res == 0
-    stop_all()
+    q_sim.stop_all()
 
 
 def test_measure():
+    q_sim = EQSN()
     id = str(10)
-    new_qubit(id)
-    res = measure(id)
+    q_sim.new_qubit(id)
+    res = q_sim.measure(id)
     assert res == 0
-    stop_all()
+    q_sim.stop_all()
 
 
 if __name__=="__main__":

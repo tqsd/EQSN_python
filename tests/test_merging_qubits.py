@@ -1,14 +1,14 @@
-from eqsn import new_qubit, stop_all
-from eqsn.gates import merge_qubits
+from eqsn import EQSN
 
 
 def test_merge():
+    q_sim = EQSN()
     id1 = str(1)
     id2 = str(2)
-    new_qubit(id1)
-    new_qubit(id2)
-    merge_qubits(id1, id2)
-    stop_all()
+    q_sim.new_qubit(id1)
+    q_sim.new_qubit(id2)
+    q_sim.merge_qubits(id1, id2)
+    q_sim.stop_all()
 
 
 if __name__ == "__main__":

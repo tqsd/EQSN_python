@@ -151,9 +151,11 @@ class QubitThread(object):
             ret_channel.put(1)
             reduction_mat = np.array([[0, 0], [0, 1]], dtype=np.csingle)
         if before > 0:
-            reduction_mat = np.kron(np.eye(2 ** before, dtype=np.csingle), reduction_mat)
+            reduction_mat = np.kron(
+                np.eye(2 ** before, dtype=np.csingle), reduction_mat)
         if after > 0:
-            reduction_mat = np.kron(reduction_mat, np.eye(2 ** after, dtype=np.csingle))
+            reduction_mat = np.kron(
+                reduction_mat, np.eye(2 ** after, dtype=np.csingle))
         # apply measurement result to state vector
         self.qubit = np.dot(reduction_mat, self.qubit)
         # renormalize the qubit vector
@@ -187,9 +189,11 @@ class QubitThread(object):
             ret_channel.put(1)
             reduction_mat = np.array([0, 1], dtype=np.csingle)
         if before > 0:
-            reduction_mat = np.kron(np.eye(2 ** before, dtype=np.csingle), reduction_mat)
+            reduction_mat = np.kron(
+                np.eye(2 ** before, dtype=np.csingle), reduction_mat)
         if after > 0:
-            reduction_mat = np.kron(reduction_mat, np.eye(2 ** after, dtype=np.csingle))
+            reduction_mat = np.kron(
+                reduction_mat, np.eye(2 ** after, dtype=np.csingle))
         self.qubits.remove(id)
         if total_amount == 1:
             # it was the last qubit, just terminate this process
@@ -215,7 +219,6 @@ class QubitThread(object):
             elif item[0] == CONTROLLED_GATE:
                 self.apply_controlled_gate(item[1], item[2], item[3])
             elif item[0] == MEASURE:
-                print("Measure called")
                 sys.stdout.flush()
                 self.measure(item[1], item[2])
                 # no qubit left, terminate

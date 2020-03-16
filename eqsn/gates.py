@@ -1,4 +1,5 @@
 import multiprocessing
+import logging
 import numpy as np
 from eqsn.qubit_thread import SINGLE_GATE, MERGE_SEND, MERGE_ACCEPT, MEASURE,\
                 MEASURE_NON_DESTRUCTIVE, GIVE_QUBITS_AND_TERMINATE, \
@@ -26,6 +27,7 @@ class EQSN(object):
         p = multiprocessing.Process(target=thread.run, args=())
         self.shared_dict.set_thread_with_id(id, p, q)
         p.start()
+        logging.debug("Created new qubit with id %s.", id)
 
     def stop_all(self):
         """
@@ -70,7 +72,8 @@ class EQSN(object):
         """
         Applies the T gate to the Qubit with q_id.
         """
-        x = np.array([[1, 0], [0, (0.7071067811865476 + 0.7071067811865475j)]], dtype=np.csingle)
+        x = np.array(
+            [[1, 0], [0, (0.7071067811865476 + 0.7071067811865475j)]], dtype=np.csingle)
         q = self.shared_dict.get_queues_for_ids([q_id])[0]
         q.put([SINGLE_GATE, x, q_id])
 
@@ -129,7 +132,7 @@ class EQSN(object):
         if len(l) == 1:
             return  # Already merged
         else:
-            # print("Merge qubits %s and %s" % (q_id1, q_id2))
+            logging.debug("Merge Qubits %s and %s.", q_id1, q_id2)
             q1 = l[0]
             q2 = l[1]
             merge_q = self.manager.Queue()
@@ -138,7 +141,8 @@ class EQSN(object):
             qubits_q = self.manager.Queue()
             q1.put([GIVE_QUBITS_AND_TERMINATE, qubits_q])
             qubits = qubits_q.get()
-            self.shared_dict.change_thread_and_queue_of_ids_and_join(qubits, q_id2)
+            self.shared_dict.change_thread_and_queue_of_ids_and_join(
+                qubits, q_id2)
 
     def cnot_gate(self, q_id1, q_id2):
         """

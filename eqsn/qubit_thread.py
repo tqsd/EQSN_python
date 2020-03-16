@@ -1,4 +1,5 @@
 import numpy as np
+import logging
 from copy import deepcopy as dp
 import random
 import sys
@@ -35,6 +36,8 @@ class QubitThread(object):
         # init qubit in state |0>
         self.qubit = np.zeros(2, dtype=np.csingle)
         self.qubit[0] = 1
+
+        logging.debug("Qubit thread with qubit %s has been created.", q_id)
 
     def apply_single_gate(self, mat, id):
         """
@@ -108,6 +111,7 @@ class QubitThread(object):
         vector = channel.get()
         self.qubits = self.qubits + ids
         self.qubit = np.kron(self.qubit, vector)
+        logging.debug("Qubit Thread merged, new qubits are %r", self.qubits)
 
     def merge_send(self, channel):
         """

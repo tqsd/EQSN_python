@@ -21,6 +21,9 @@ class EQSN(object):
     def new_qubit(self, id):
         """
         Creates a new qubit with an id.
+
+        Args:
+            id (String): Id of the new qubit.
         """
         q = multiprocessing.Queue()
         thread = QubitThread(id, q)
@@ -73,7 +76,8 @@ class EQSN(object):
         Applies the T gate to the Qubit with q_id.
         """
         x = np.array(
-            [[1, 0], [0, (0.7071067811865476 + 0.7071067811865475j)]], dtype=np.csingle)
+            [[1, 0], [0, (0.7071067811865476 + 0.7071067811865475j)]],
+            dtype=np.csingle)
         q = self.shared_dict.get_queues_for_ids([q_id])[0]
         q.put([SINGLE_GATE, x, q_id])
 
@@ -127,6 +131,10 @@ class EQSN(object):
         """
         Merges two qubits to one process, if they are not already
         running in the same process.
+
+        Args:
+            q_id1 (String): Id of the Qubit merged into q_id2.
+            q_id2 (String): Id of the Qubit merged with q_id1.
         """
         l = self.shared_dict.get_queues_for_ids([q_id1, q_id2])
         if len(l) == 1:
@@ -148,6 +156,10 @@ class EQSN(object):
         """
         Applies a controlled X gate, where the gate is applied to
         q_id1 and controlled by q_id2.
+
+        Args:
+            q_id1 (String): Id of the Qubit on which the X gate is applied.
+            q_id2 (String): Id of the Qubit which controls the gate.
         """
         x = np.array([[0, 1], [1, 0]], dtype=np.csingle)
         self.merge_qubits(q_id1, q_id2)
@@ -156,7 +168,7 @@ class EQSN(object):
 
     def cphase_gate(self, q_id1, q_id2):
         """
-        Applies a controlled X gate, where the gate is applied to
+        Applies a controlled Z gate, where the gate is applied to
         q_id1 and controlled by q_id2.
         """
         x = np.array([[0, 1], [0, -1]], dtype=np.csingle)
@@ -167,8 +179,13 @@ class EQSN(object):
     def measure(self, id, non_destructive=False):
         """
         Measures a qubit with an id. If non_destructive is False, the qubit
-        is removed from the system, otherwise, the qubit stays in the system after
-        measurement, but its wavefunction collapses.
+        is removed from the system, otherwise, the qubit stays in the system
+        after measurement, but its wavefunction collapses.
+
+        Args:
+            id (String): Id of the Qubit which should be measured.
+            non_destructive(bool): If a qubit should not be removed from the
+                                    system after measurement.
         """
         ret = self.manager.Queue()
         q = self.shared_dict.get_queues_for_ids([id])[0]
@@ -179,4 +196,6 @@ class EQSN(object):
         res = ret.get()
         if not non_destructive:
             self.shared_dict.delete_id_and_check_to_join_thread(id)
+        logging.debug(
+            "Qubit with id %s has been measured with outcome %d.", id, res)
         return res

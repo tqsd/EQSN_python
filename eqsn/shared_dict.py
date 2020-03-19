@@ -57,7 +57,7 @@ class SharedDict(object):
             self._writerList.append(threading.get_ident())
             while self._readers > 0:
                 if self._promote and threading.get_ident() in self._readerList and set(self._readerList).issubset(
-                set(self._writerList)):
+                        set(self._writerList)):
                     break
                 else:
                     self._read_ready.wait()
@@ -93,8 +93,8 @@ class SharedDict(object):
     def get_queues_for_ids(self, q_id_list):
         ret = []
         self.lock.acquire_read()
-        for id in q_id_list:
-            res = self.id_to_queue[id]
+        for q_id in q_id_list:
+            res = self.id_to_queue[q_id]
             if res not in ret:
                 ret.append(res)
         self.lock.release_read()

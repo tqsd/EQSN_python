@@ -18,7 +18,7 @@ class EQSN(object):
         self.manager = multiprocessing.Manager()
         self.shared_dict = SharedDict.get_instance()
 
-    def new_qubit(self, id):
+    def new_qubit(self, q_id):
         """
         Creates a new qubit with an id.
 
@@ -26,11 +26,11 @@ class EQSN(object):
             id (String): Id of the new qubit.
         """
         q = multiprocessing.Queue()
-        thread = QubitThread(id, q)
+        thread = QubitThread(q_id, q)
         p = multiprocessing.Process(target=thread.run, args=())
-        self.shared_dict.set_thread_with_id(id, p, q)
+        self.shared_dict.set_thread_with_id(q_id, p, q)
         p.start()
-        logging.debug("Created new qubit with id %s.", id)
+        logging.debug("Created new qubit with id %s.", q_id)
 
     def stop_all(self):
         """
@@ -176,7 +176,7 @@ class EQSN(object):
         q = self.shared_dict.get_queues_for_ids([q_id1])[0]
         q.put([CONTROLLED_GATE, x, q_id1, q_id2])
 
-    def measure(self, id, non_destructive=False):
+    def measure(self, q_id, non_destructive=False):
         """
         Measures a qubit with an id. If non_destructive is False, the qubit
         is removed from the system, otherwise, the qubit stays in the system
@@ -188,14 +188,14 @@ class EQSN(object):
                                     system after measurement.
         """
         ret = self.manager.Queue()
-        q = self.shared_dict.get_queues_for_ids([id])[0]
+        q = self.shared_dict.get_queues_for_ids([q_id])[0]
         if non_destructive:
-            q.put([MEASURE_NON_DESTRUCTIVE, id, ret])
+            q.put([MEASURE_NON_DESTRUCTIVE, q_id, ret])
         else:
-            q.put([MEASURE, id, ret])
+            q.put([MEASURE, q_id, ret])
         res = ret.get()
         if not non_destructive:
-            self.shared_dict.delete_id_and_check_to_join_thread(id)
+            self.shared_dict.delete_id_and_check_to_join_thread(q_id)
         logging.debug(
-            "Qubit with id %s has been measured with outcome %d.", id, res)
+            "Qubit with id %s has been measured with outcome %d.", q_id, res)
         return res

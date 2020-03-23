@@ -12,6 +12,8 @@ MERGE_ACCEPT = 4
 MERGE_SEND = 5
 GIVE_QUBITS_AND_TERMINATE = 6
 MEASURE_NON_DESTRUCTIVE = 7
+NEW_QUBIT = 8
+ADD_MERGED_QUBITS_TO_DICT = 9
 
 
 class QubitThread(object):
@@ -212,18 +214,15 @@ class QubitThread(object):
         """
         Run in loop and wait to receive tasks to perform.
         """
-        amount_single_gate = 0
         while True:
             item = self.queue.get()
             if item is None:
                 return
             elif item[0] == SINGLE_GATE:
                 self.apply_single_gate(item[1], item[2])
-                amount_single_gate += 1
             elif item[0] == CONTROLLED_GATE:
                 self.apply_controlled_gate(item[1], item[2], item[3])
             elif item[0] == MEASURE:
-                sys.stdout.flush()
                 self.measure(item[1], item[2])
                 # no qubit left, terminate
                 if len(self.qubits) == 0:

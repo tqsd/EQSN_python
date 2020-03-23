@@ -3,8 +3,10 @@ import logging
 import numpy as np
 from eqsn.qubit_thread import SINGLE_GATE, MERGE_SEND, MERGE_ACCEPT, MEASURE,\
                 MEASURE_NON_DESTRUCTIVE, GIVE_QUBITS_AND_TERMINATE, \
-                CONTROLLED_GATE, QubitThread
+                CONTROLLED_GATE, NEW_QUBIT, ADD_MERGED_QUBITS_TO_DICT
 from eqsn.shared_dict import SharedDict
+from eqsn.worker_process import WorkerProcess
+from eqsn.process_picker import ProcessPicker
 
 
 class EQSN(object):
@@ -17,19 +19,26 @@ class EQSN(object):
     def __init__(self):
         self.manager = multiprocessing.Manager()
         self.shared_dict = SharedDict.get_instance()
+        cpu_count = multiprocessing.cpu_count()
+        process_queue_list = []
+        for _ in range(cpu_count):
+            q = multiprocessing.Queue()
+            new_worker = WorkerProcess(q)
+            p = multiprocessing.Process(target=new_worker.run, args=())
+            p.start()
+            process_queue_list.append((p, q))
+        self.process_picker = ProcessPicker(cpu_count, process_queue_list)
 
     def new_qubit(self, q_id):
         """
         Creates a new qubit with an id.
 
         Args:
-            id (String): Id of the new qubit.
+            q_id (String): Id of the new qubit.
         """
-        q = multiprocessing.Queue()
-        thread = QubitThread(q_id, q)
-        p = multiprocessing.Process(target=thread.run, args=())
+        p, q = self.process_picker.get_next_process_queue()
+        q.put([NEW_QUBIT, q_id])
         self.shared_dict.set_thread_with_id(q_id, p, q)
-        p.start()
         logging.debug("Created new qubit with id %s.", q_id)
 
     def stop_all(self):
@@ -144,11 +153,12 @@ class EQSN(object):
             q1 = l[0]
             q2 = l[1]
             merge_q = self.manager.Queue()
-            q1.put([MERGE_SEND, merge_q])
-            q2.put([MERGE_ACCEPT, merge_q])
+            q1.put([MERGE_SEND, q_id1, merge_q])
+            q2.put([MERGE_ACCEPT, q_id2, merge_q])
             qubits_q = self.manager.Queue()
-            q1.put([GIVE_QUBITS_AND_TERMINATE, qubits_q])
+            q1.put([GIVE_QUBITS_AND_TERMINATE, q_id1, qubits_q])
             qubits = qubits_q.get()
+            q2.put([ADD_MERGED_QUBITS_TO_DICT, q_id2, qubits])
             self.shared_dict.change_thread_and_queue_of_ids_and_join(
                 qubits, q_id2)
 

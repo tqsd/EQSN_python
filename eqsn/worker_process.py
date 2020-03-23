@@ -37,8 +37,9 @@ class WorkerProcess(object):
         self.shared_dict.send_all_threads(None)
         self.shared_dict.stop_all_threads()
 
-    def apply_single_gate(self, gate, id):
-        pass
+    def apply_single_gate(self, gate, q_id):
+        q = self.shared_dict.get_queues_for_ids([id])[0]
+        q.put([SINGLE_GATE, gate, q_id])
 
     def apply_multi_gate(self, gate, id1, id2):
         """

@@ -11,13 +11,13 @@ def test_measure_from_threads():
     def measure_or_hadamard(id):
         n = random.randrange(10, 100, 1)
         for _ in range(n):
-            time.sleep(0.1)
+            time.sleep(0.05)
             q_sim.H_gate(id)
         print("Finished Hadamard, measure qubit %s!" % id)
         print(q_sim.measure(id))
         print("Finished with Measure!")
 
-    nr_threads = 10
+    nr_threads = 5
     ids = [str(x) for x in range(nr_threads)]
     for id in ids:
         q_sim.new_qubit(id)
@@ -27,7 +27,8 @@ def test_measure_from_threads():
             q_sim.cnot_gate(id1, c)
     thread_list = []
     for id in ids:
-        t = threading.Thread(target=measure_or_hadamard, args=(id))
+        print(id)
+        t = threading.Thread(target=measure_or_hadamard, args=(id,))
         t.start()
         thread_list.append(t)
     for t in thread_list:

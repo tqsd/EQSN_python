@@ -79,6 +79,11 @@ class SharedDict(object):
             return SharedDict()
         return SharedDict.__instance
 
+    @staticmethod
+    def get_new_instance():
+        SharedDict.__instance = None
+        return SharedDict()
+
     def __init__(self):
         if SharedDict.__instance is not None:
             raise Exception("Call get instance to get this class!")
@@ -89,6 +94,17 @@ class SharedDict(object):
         self.id_to_thread = {}
         self.thread_list = []
         self.queue_list = []
+
+    def get_queues_and_threads_for_ids(self, q_id_list):
+        ret = []
+        self.lock.acquire_read()
+        for q_id in q_id_list:
+            res = self.id_to_queue[q_id]
+            res2 = self.id_to_thread[q_id]
+            if res not in ret:
+                ret.append((res, res2))
+        self.lock.release_read()
+        return ret
 
     def get_queues_for_ids(self, q_id_list):
         ret = []
@@ -150,6 +166,15 @@ class SharedDict(object):
             self.id_to_queue[q_id] = new_queue
         self.lock.release_write()
 
+    def change_thread_and_queue_of_ids(self, q_ids, q_id_new_thread):
+        self.lock.acquire_write()
+        new_thread = self.id_to_thread[q_id_new_thread]
+        new_queue = self.id_to_queue[q_id_new_thread]
+        for q_id in q_ids:
+            self.id_to_thread[q_id] = new_thread
+            self.id_to_queue[q_id] = new_queue
+        self.lock.release_write()
+
     def send_all_threads(self, msg):
         self.lock.acquire_write()
         for p in self.queue_list:
@@ -161,3 +186,6 @@ class SharedDict(object):
         for p in self.thread_list:
             p.join()
         self.lock.release_write()
+
+    def stop_shared_dict(self):
+        SharedDict.__instance = None

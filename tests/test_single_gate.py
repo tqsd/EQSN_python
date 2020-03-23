@@ -1,6 +1,6 @@
 import sys
 from eqsn import EQSN
-
+import time
 
 def test_x_gate():
     q_sim = EQSN()
@@ -108,11 +108,14 @@ def test_measure():
 
 
 if __name__ == "__main__":
-    test_x_gate()
-    test_y_gate()
-    test_z_gate()
-    test_H_gate()
-    test_T_gate()
-    test_S_gate()
-    test_K_gate()
-    test_measure()
+    test_list = [test_x_gate,
+                test_y_gate,
+                test_z_gate,
+                test_H_gate,
+                test_T_gate,
+                test_S_gate,
+                test_K_gate,
+                test_measure]
+    for func in test_list:
+        func()
+        time.sleep(0.01)

@@ -1,4 +1,5 @@
 from eqsn import EQSN
+import time
 
 
 def test_epr_creation():
@@ -36,4 +37,5 @@ def test_5_qubits_gate():
 
 if __name__ == "__main__":
     test_epr_creation()
+    time.sleep(0.1)
     test_5_qubits_gate()

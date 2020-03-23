@@ -1,5 +1,6 @@
 import logging
 import threading
+from queue import Queue
 from eqsn.shared_dict import SharedDict
 from eqsn.qubit_thread import SINGLE_GATE, MERGE_SEND, MERGE_ACCEPT, MEASURE,\
                 MEASURE_NON_DESTRUCTIVE, GIVE_QUBITS_AND_TERMINATE, \
@@ -10,8 +11,8 @@ class WorkerProcess(object):
 
     def __init__(self, queue):
         self.queue = queue
-        self.shared_dict = SharedDict.get_instance()
-        self.manager = threading.Manager()
+        # Get a new instance, since their might be one from the old process
+        self.shared_dict = SharedDict.get_new_instance()
 
     def run(self):
         """
@@ -33,9 +34,9 @@ class WorkerProcess(object):
             elif item[0] == MEASURE:
                 self.measure(item[1], item[2])
             elif item[0] == MERGE_ACCEPT:
-                self.merge_accept(item[1])
+                self.merge_accept(item[1], item[2])
             elif item[0] == MERGE_SEND:
-                self.merge_send(item[1])
+                self.merge_send(item[1], item[2])
             elif item[0] == GIVE_QUBITS_AND_TERMINATE:
                 self.give_qubits_and_terminate(item[1], item[2])
             elif item[0] == MEASURE_NON_DESTRUCTIVE:
@@ -52,15 +53,27 @@ class WorkerProcess(object):
         Args:
             id (String): Id of the new qubit.
         """
-        q = threading.Queue()
+        q = Queue()
         thread = QubitThread(q_id, q)
-        p = threading.Process(target=thread.run, args=())
+        p = threading.Thread(target=thread.run, args=())
         self.shared_dict.set_thread_with_id(q_id, p, q)
         p.start()
         logging.debug("Created new qubit with id %s.", q_id)
 
+    def measure(self, q_id, channel):
+        temp_queue = Queue()
+        q = self.shared_dict.get_queues_for_ids([q_id])[0]
+        q.put([MEASURE, q_id, temp_queue])
+        res = temp_queue.get()
+        channel.put(res)
+        self.shared_dict.delete_id_and_check_to_join_thread(q_id)
+
+    def measure_non_destructive(self, q_id, channel):
+        q = self.shared_dict.get_queues_for_ids([q_id])[0]
+        q.put([MEASURE_NON_DESTRUCTIVE, q_id, channel])
+
     def give_qubits_and_terminate(self, q_id, queue):
-        temp_queue = threading.Queue()
+        temp_queue = Queue()
         q = self.shared_dict.get_queues_for_ids([q_id])[0]
         q.put([GIVE_QUBITS_AND_TERMINATE, temp_queue])
         qubits = temp_queue.get()
@@ -71,7 +84,9 @@ class WorkerProcess(object):
         queue.put(qubits)
 
     def add_merged_qubits_to_thread(self, q_id, qubits):
-        pass
+        q, t = self.shared_dict.get_queues_and_threads_for_ids([q_id])[0]
+        for qubit in qubits:
+            self.shared_dict.set_thread_with_id(qubit, t, q)
 
     def stop_all(self):
         """
@@ -84,7 +99,7 @@ class WorkerProcess(object):
         """
         Applies a single gate to a Qubit.
         """
-        q = self.shared_dict.get_queues_for_ids([id])[0]
+        q = self.shared_dict.get_queues_for_ids([q_id])[0]
         q.put([SINGLE_GATE, gate, q_id])
 
     def apply_controlled_gate(self, gate, q_id1, q_id2):
@@ -100,11 +115,11 @@ class WorkerProcess(object):
         q = self.shared_dict.get_queues_for_ids([q_id1])[0]
         q.put([CONTROLLED_GATE, gate, q_id1, q_id2])
 
-    def merge_send(self, queue, q_id):
+    def merge_send(self, q_id, queue):
         q = self.shared_dict.get_queues_for_ids([q_id])[0]
         q.put([MERGE_SEND, queue])
 
-    def merge_pass(self, queue, q_id):
+    def merge_accept(self, q_id, queue):
         q = self.shared_dict.get_queues_for_ids([q_id])[0]
         q.put([MERGE_ACCEPT, queue])
 
@@ -124,10 +139,10 @@ class WorkerProcess(object):
             logging.debug("Merge Qubits %s and %s.", q_id1, q_id2)
             q1 = l[0]
             q2 = l[1]
-            merge_q = self.manager.Queue()
+            merge_q = Queue()
             q1.put([MERGE_SEND, merge_q])
             q2.put([MERGE_ACCEPT, merge_q])
-            qubits_q = self.manager.Queue()
+            qubits_q = Queue()
             q1.put([GIVE_QUBITS_AND_TERMINATE, qubits_q])
             qubits = qubits_q.get()
             self.shared_dict.change_thread_and_queue_of_ids_and_join(

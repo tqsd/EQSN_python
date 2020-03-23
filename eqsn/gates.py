@@ -19,7 +19,8 @@ class EQSN(object):
     def __init__(self):
         self.manager = multiprocessing.Manager()
         self.shared_dict = SharedDict.get_instance()
-        cpu_count = multiprocessing.cpu_count()
+        # cpu_count = multiprocessing.cpu_count()
+        cpu_count = 1
         process_queue_list = []
         for _ in range(cpu_count):
             q = multiprocessing.Queue()
@@ -27,7 +28,8 @@ class EQSN(object):
             p = multiprocessing.Process(target=new_worker.run, args=())
             p.start()
             process_queue_list.append((p, q))
-        self.process_picker = ProcessPicker(cpu_count, process_queue_list)
+        self.process_picker = ProcessPicker.get_instance(
+            cpu_count, process_queue_list)
 
     def new_qubit(self, q_id):
         """
@@ -47,6 +49,8 @@ class EQSN(object):
         """
         self.shared_dict.send_all_threads(None)
         self.shared_dict.stop_all_threads()
+        self.shared_dict.stop_shared_dict()
+        self.process_picker.stop_process_picker()
 
     def X_gate(self, q_id):
         """
@@ -159,7 +163,7 @@ class EQSN(object):
             q1.put([GIVE_QUBITS_AND_TERMINATE, q_id1, qubits_q])
             qubits = qubits_q.get()
             q2.put([ADD_MERGED_QUBITS_TO_DICT, q_id2, qubits])
-            self.shared_dict.change_thread_and_queue_of_ids_and_join(
+            self.shared_dict.change_thread_and_queue_of_ids(
                 qubits, q_id2)
 
     def cnot_gate(self, q_id1, q_id2):

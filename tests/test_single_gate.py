@@ -8,6 +8,7 @@ def test_x_gate():
     q_sim.new_qubit(id)
     q_sim.X_gate(id)
     res = q_sim.measure(id)
+    print("measured " + str(res))
     assert res == 1
     q_sim.stop_all()
 
@@ -19,6 +20,7 @@ def test_y_gate():
     q_sim.Y_gate(id)
     q_sim.Y_gate(id)
     res = q_sim.measure(id)
+    print("measured " + str(res))
     assert res == 0
     q_sim.stop_all()
 
@@ -105,8 +107,8 @@ def test_measure():
     q_sim.stop_all()
 
 
-if __name__=="__main__":
-    test_x_gate()
+if __name__ == "__main__":
+    # test_x_gate()
     test_y_gate()
     test_z_gate()
     test_H_gate()

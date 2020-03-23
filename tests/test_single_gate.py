@@ -108,7 +108,7 @@ def test_measure():
 
 
 if __name__ == "__main__":
-    # test_x_gate()
+    test_x_gate()
     test_y_gate()
     test_z_gate()
     test_H_gate()

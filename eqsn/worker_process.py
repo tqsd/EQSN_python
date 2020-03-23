@@ -94,6 +94,7 @@ class WorkerProcess(object):
         """
         self.shared_dict.send_all_threads(None)
         self.shared_dict.stop_all_threads()
+        self.shared_dict.stop_shared_dict()
 
     def apply_single_gate(self, gate, q_id):
         """

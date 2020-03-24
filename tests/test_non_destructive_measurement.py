@@ -12,6 +12,8 @@ def test_non_destructive_measurement():
     assert m == m2
     print("Test was successfull!")
     q_sim.stop_all()
+    print("Stopped succesfully!")
+    exit(0)
 
 
 if __name__ == "__main__":

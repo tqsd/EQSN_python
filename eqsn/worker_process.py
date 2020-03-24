@@ -1,5 +1,6 @@
 import logging
 import threading
+import os
 from queue import Queue
 from eqsn.shared_dict import SharedDict
 from eqsn.qubit_thread import SINGLE_GATE, MERGE_SEND, MERGE_ACCEPT, MEASURE,\
@@ -36,7 +37,7 @@ class WorkerProcess(object):
             elif item[0] == MERGE_ACCEPT:
                 self.merge_accept(item[1], item[2])
             elif item[0] == MERGE_SEND:
-                self.merge_send(item[1], item[2])
+                self.merge_send(item[1], item[2], item[3])
             elif item[0] == MEASURE_NON_DESTRUCTIVE:
                 self.measure_non_destructive(item[1], item[2])
             elif item[0] == ADD_MERGED_QUBITS_TO_DICT:

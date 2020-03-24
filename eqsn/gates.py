@@ -20,15 +20,15 @@ class EQSN(object):
         self.manager = multiprocessing.Manager()
         self.shared_dict = SharedDict.get_instance()
         cpu_count = multiprocessing.cpu_count()
-        process_queue_list = []
+        self.process_queue_list = []
         for _ in range(cpu_count):
             q = multiprocessing.Queue()
             new_worker = WorkerProcess(q)
             p = multiprocessing.Process(target=new_worker.run, args=())
             p.start()
-            process_queue_list.append((p, q))
+            self.process_queue_list.append((p, q))
         self.process_picker = ProcessPicker.get_instance(
-            cpu_count, process_queue_list)
+            cpu_count, self.process_queue_list)
 
     def new_qubit(self, q_id):
         """
@@ -46,8 +46,9 @@ class EQSN(object):
         """
         Stops the simulator from running.
         """
-        self.shared_dict.send_all_threads(None)
-        self.shared_dict.stop_all_threads()
+        for p, q in self.process_queue_list:
+            q.put(None)
+            p.join()
         self.shared_dict.stop_shared_dict()
         self.process_picker.stop_process_picker()
 

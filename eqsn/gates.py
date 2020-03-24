@@ -19,8 +19,7 @@ class EQSN(object):
     def __init__(self):
         self.manager = multiprocessing.Manager()
         self.shared_dict = SharedDict.get_instance()
-        # cpu_count = multiprocessing.cpu_count()
-        cpu_count = 1
+        cpu_count = multiprocessing.cpu_count()
         process_queue_list = []
         for _ in range(cpu_count):
             q = multiprocessing.Queue()

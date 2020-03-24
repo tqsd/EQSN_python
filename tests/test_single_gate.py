@@ -118,4 +118,4 @@ if __name__ == "__main__":
                 test_measure]
     for func in test_list:
         func()
-        time.sleep(0.01)
+        time.sleep(0.05)

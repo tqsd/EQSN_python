@@ -37,5 +37,5 @@ def test_5_qubits_gate():
 
 if __name__ == "__main__":
     test_epr_creation()
-    time.sleep(0.1)
+    time.sleep(0.05)
     test_5_qubits_gate()

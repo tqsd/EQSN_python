@@ -2,7 +2,7 @@ import multiprocessing
 import logging
 import numpy as np
 from eqsn.qubit_thread import SINGLE_GATE, MERGE_SEND, MERGE_ACCEPT, MEASURE,\
-                MEASURE_NON_DESTRUCTIVE, GIVE_QUBITS_AND_TERMINATE, \
+                MEASURE_NON_DESTRUCTIVE, \
                 CONTROLLED_GATE, NEW_QUBIT, ADD_MERGED_QUBITS_TO_DICT
 from eqsn.shared_dict import SharedDict
 from eqsn.worker_process import WorkerProcess
@@ -19,17 +19,16 @@ class EQSN(object):
     def __init__(self):
         self.manager = multiprocessing.Manager()
         self.shared_dict = SharedDict.get_instance()
-        # cpu_count = multiprocessing.cpu_count()
-        cpu_count = 1
-        process_queue_list = []
+        cpu_count = multiprocessing.cpu_count()
+        self.process_queue_list = []
         for _ in range(cpu_count):
             q = multiprocessing.Queue()
             new_worker = WorkerProcess(q)
             p = multiprocessing.Process(target=new_worker.run, args=())
             p.start()
-            process_queue_list.append((p, q))
+            self.process_queue_list.append((p, q))
         self.process_picker = ProcessPicker.get_instance(
-            cpu_count, process_queue_list)
+            cpu_count, self.process_queue_list)
 
     def new_qubit(self, q_id):
         """
@@ -47,8 +46,9 @@ class EQSN(object):
         """
         Stops the simulator from running.
         """
-        self.shared_dict.send_all_threads(None)
-        self.shared_dict.stop_all_threads()
+        for p, q in self.process_queue_list:
+            q.put(None)
+            p.join()
         self.shared_dict.stop_shared_dict()
         self.process_picker.stop_process_picker()
 
@@ -153,18 +153,20 @@ class EQSN(object):
         if len(l) == 1:
             return  # Already merged
         else:
+            # Block the dictionary, that noone can send commands to the qubits,
             logging.debug("Merge Qubits %s and %s.", q_id1, q_id2)
+            self.shared_dict.block_shared_dict()
             q1 = l[0]
             q2 = l[1]
             merge_q = self.manager.Queue()
-            q1.put([MERGE_SEND, q_id1, merge_q])
-            q2.put([MERGE_ACCEPT, q_id2, merge_q])
             qubits_q = self.manager.Queue()
-            q1.put([GIVE_QUBITS_AND_TERMINATE, q_id1, qubits_q])
+            q1.put([MERGE_SEND, q_id1, merge_q, qubits_q])
+            q2.put([MERGE_ACCEPT, q_id2, merge_q])
             qubits = qubits_q.get()
             q2.put([ADD_MERGED_QUBITS_TO_DICT, q_id2, qubits])
-            self.shared_dict.change_thread_and_queue_of_ids(
+            self.shared_dict.change_thread_and_queue_of_ids_nonblocking(
                 qubits, q_id2)
+            self.shared_dict.release_shared_dict()
 
     def cnot_gate(self, q_id1, q_id2):
         """

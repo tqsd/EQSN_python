@@ -10,7 +10,6 @@ CONTROLLED_GATE = 2
 MEASURE = 3
 MERGE_ACCEPT = 4
 MERGE_SEND = 5
-GIVE_QUBITS_AND_TERMINATE = 6
 MEASURE_NON_DESTRUCTIVE = 7
 NEW_QUBIT = 8
 ADD_MERGED_QUBITS_TO_DICT = 9
@@ -115,19 +114,13 @@ class QubitThread(object):
         self.qubit = np.kron(self.qubit, vector)
         logging.debug("Qubit Thread merged, new qubits are %r", self.qubits)
 
-    def merge_send(self, channel):
+    def merge_send(self, channel, chanel2):
         """
         Send own process data to another process and suicide.
         """
         channel.put(dp(self.qubits))
         channel.put(dp(self.qubit))
-        return
-
-    def send_qubits(self, channel):
-        """
-        Send which qubits are in this process over a channel.
-        """
-        channel.put(dp(self.qubits))
+        chanel2.put(dp(self.qubits))
         return
 
     def measure_non_destructive(self, q_id, ret_channel):
@@ -145,7 +138,11 @@ class QubitThread(object):
         if after > 0:
             measure_vec = np.kron(measure_vec, np.ones(2 ** after))
         pr_0 = np.multiply(measure_vec, self.qubit)
-        pr_0 = abs(np.dot(pr_0, pr_0).real)
+        pr_0 = abs(np.dot(pr_0, pr_0))
+        if pr_0 > 1.0:
+            pr_0 = 1.0
+        elif pr_0 < 0.0:
+            pr_0 = 0.0
         meas_res = np.random.binomial(1, 1.0 - pr_0)
         reduction_mat = None
         if meas_res == 0:
@@ -183,7 +180,11 @@ class QubitThread(object):
         if after > 0:
             measure_vec = np.kron(measure_vec, np.ones(2 ** after))
         pr_0 = np.multiply(measure_vec, self.qubit)
-        pr_0 = abs(np.dot(pr_0, pr_0).real)
+        pr_0 = abs(np.dot(pr_0, pr_0))
+        if pr_0 > 1.0:
+            pr_0 = 1.0
+        elif pr_0 < 0.0:
+            pr_0 = 0.0
         meas_res = np.random.binomial(1, 1.0 - pr_0)
         reduction_mat = None
         if meas_res == 0:
@@ -230,9 +231,7 @@ class QubitThread(object):
             elif item[0] == MERGE_ACCEPT:
                 self.merge_accept(item[1])
             elif item[0] == MERGE_SEND:
-                self.merge_send(item[1])
-            elif item[0] == GIVE_QUBITS_AND_TERMINATE:
-                self.send_qubits(item[1])
+                self.merge_send(item[1], item[2])
                 return
             elif item[0] == MEASURE_NON_DESTRUCTIVE:
                 self.measure_non_destructive(item[1], item[2])

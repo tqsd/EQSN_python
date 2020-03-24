@@ -95,6 +95,12 @@ class SharedDict(object):
         self.thread_list = []
         self.queue_list = []
 
+    def block_shared_dict(self):
+        self.lock.acquire_write()
+
+    def release_shared_dict(self):
+        self.lock.release_write()
+
     def get_queues_and_threads_for_ids(self, q_id_list):
         ret = []
         self.lock.acquire_read()
@@ -174,6 +180,13 @@ class SharedDict(object):
             self.id_to_thread[q_id] = new_thread
             self.id_to_queue[q_id] = new_queue
         self.lock.release_write()
+
+    def change_thread_and_queue_of_ids_nonblocking(self, q_ids, q_id_new_thread):
+        new_thread = self.id_to_thread[q_id_new_thread]
+        new_queue = self.id_to_queue[q_id_new_thread]
+        for q_id in q_ids:
+            self.id_to_thread[q_id] = new_thread
+            self.id_to_queue[q_id] = new_queue
 
     def send_all_threads(self, msg):
         self.lock.acquire_write()

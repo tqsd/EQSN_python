@@ -3,7 +3,7 @@ from eqsn import EQSN
 import time
 
 def test_x_gate():
-    q_sim = EQSN()
+    q_sim = EQSN.get_instance()
     id = str(10)
     q_sim.new_qubit(id)
     q_sim.X_gate(id)
@@ -14,8 +14,8 @@ def test_x_gate():
 
 
 def test_y_gate():
-    q_sim = EQSN()
-    id = str(10)
+    q_sim = EQSN.get_instance()
+    id = str(11)
     q_sim.new_qubit(id)
     q_sim.Y_gate(id)
     q_sim.Y_gate(id)
@@ -26,7 +26,7 @@ def test_y_gate():
 
 
 def test_z_gate():
-    q_sim = EQSN()
+    q_sim = EQSN.get_instance()
     id = str(10)
     q_sim.new_qubit(id)
     q_sim.Z_gate(id)
@@ -37,7 +37,7 @@ def test_z_gate():
 
 
 def test_H_gate():
-    q_sim = EQSN()
+    q_sim = EQSN.get_instance()
     id = str(10)
     q_sim.new_qubit(id)
     q_sim.H_gate(id)
@@ -48,7 +48,7 @@ def test_H_gate():
 
 
 def test_T_gate():
-    q_sim = EQSN()
+    q_sim = EQSN.get_instance()
     id = str(10)
     q_sim.new_qubit(id)
     q_sim.T_gate(id)
@@ -70,7 +70,7 @@ def test_T_gate():
 
 
 def test_S_gate():
-    q_sim = EQSN()
+    q_sim = EQSN.get_instance()
     id = str(11)
     q_sim.new_qubit(id)
     q_sim.H_gate(id)
@@ -84,7 +84,7 @@ def test_S_gate():
 
 
 def test_K_gate():
-    q_sim = EQSN()
+    q_sim = EQSN.get_instance()
     print("test K gate.")
     id = str(11)
     q_sim.new_qubit(id)
@@ -99,7 +99,7 @@ def test_K_gate():
 
 
 def test_measure():
-    q_sim = EQSN()
+    q_sim = EQSN.get_instance()
     id = str(10)
     q_sim.new_qubit(id)
     res = q_sim.measure(id)
@@ -118,4 +118,4 @@ if __name__ == "__main__":
                 test_measure]
     for func in test_list:
         func()
-        time.sleep(0.05)
+        time.sleep(0.1)

@@ -3,7 +3,7 @@ import time
 
 
 def test_epr_creation():
-    q_sim = EQSN()
+    q_sim = EQSN.get_instance()
     id1 = str(1)
     id2 = str(2)
     q_sim.new_qubit(id1)

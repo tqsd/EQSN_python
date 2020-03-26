@@ -15,8 +15,18 @@ class EQSN(object):
     All functions are threadsafe, but at the moment, only one instance should be
     used.
     """
+    __instance = None
+
+    @staticmethod
+    def get_instance():
+        if EQSN.__instance is None:
+            return EQSN()
+        return EQSN.__instance
 
     def __init__(self):
+        if EQSN.__instance is not None:
+            raise ValueError("Use get instance to get this class")
+        EQSN.__instance = self
         self.manager = multiprocessing.Manager()
         self.shared_dict = SharedDict.get_instance()
         cpu_count = multiprocessing.cpu_count()

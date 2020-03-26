@@ -61,6 +61,7 @@ class EQSN(object):
             p.join()
         self.shared_dict.stop_shared_dict()
         self.process_picker.stop_process_picker()
+        EQSN.__instance = None
 
     def X_gate(self, q_id):
         """

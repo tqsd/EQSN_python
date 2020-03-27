@@ -13,6 +13,7 @@ MERGE_SEND = 5
 MEASURE_NON_DESTRUCTIVE = 7
 NEW_QUBIT = 8
 ADD_MERGED_QUBITS_TO_DICT = 9
+GIVE_STATEVECTOR = 10
 
 
 class QubitThread(object):
@@ -58,6 +59,9 @@ class QubitThread(object):
         if after > 0:
             apply_mat = np.kron(apply_mat, np.eye(2 ** after))
         self.qubit = np.dot(apply_mat, self.qubit)
+
+    def give_statevector(self, channel):
+        channel.put((dp(self.qubits), dp(self.qubit)))
 
     def apply_controlled_gate(self, mat, q_id1, q_id2):
         """
@@ -235,5 +239,7 @@ class QubitThread(object):
                 return
             elif item[0] == MEASURE_NON_DESTRUCTIVE:
                 self.measure_non_destructive(item[1], item[2])
+            elif item[0] == GIVE_STATEVECTOR:
+                self.give_statevector(item[1])
             else:
                 raise ValueError("Command does not exist!")

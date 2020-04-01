@@ -1,8 +1,9 @@
 from eqsn import EQSN
+import time
 
 
 def test_epr_creation():
-    q_sim = EQSN()
+    q_sim = EQSN.get_instance()
     id1 = str(1)
     id2 = str(2)
     q_sim.new_qubit(id1)
@@ -36,4 +37,5 @@ def test_5_qubits_gate():
 
 if __name__ == "__main__":
     test_epr_creation()
+    time.sleep(0.05)
     test_5_qubits_gate()

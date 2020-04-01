@@ -5,3 +5,4 @@ reinstall_eqsn.sh
 .idea/
 dist/
 EQSN.egg-info/
+build

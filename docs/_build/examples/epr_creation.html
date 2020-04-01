@@ -179,7 +179,13 @@
 14
 15
 16
-17</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">eqsn</span>
+17
+18
+19
+20</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">eqsn</span> <span class="kn">import</span> <span class="n">EQSN</span>
+
+<span class="c1"># create EQSN control object</span>
+<span class="n">eqsn</span> <span class="o">=</span> <span class="n">EQSN</span><span class="p">()</span>
 
 <span class="c1"># Create two Qubits, with ids A and B</span>
 <span class="n">eqsn</span><span class="o">.</span><span class="n">new_qubit</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
@@ -195,7 +201,7 @@
 <span class="n">m1</span> <span class="o">=</span> <span class="n">eqsn</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
 <span class="n">m2</span> <span class="o">=</span> <span class="n">eqsn</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">)</span>
 
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;measured </span><span class="si">%d</span><span class="s2"> and </span><span class="si">%d</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">m2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;measured </span><span class="si">%d</span><span class="s2"> and </span><span class="si">%d</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">m2</span><span class="p">))</span>
 </pre></div>
 </td></tr></table></div>
 </div>

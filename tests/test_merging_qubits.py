@@ -9,6 +9,7 @@ def test_merge():
     q_sim.new_qubit(id2)
     q_sim.merge_qubits(id1, id2)
     q_sim.stop_all()
+    print("merging was succesfull")
 
 
 if __name__ == "__main__":

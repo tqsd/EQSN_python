@@ -6,7 +6,10 @@ Below, an example is shown, how an EPR state can be created.
 ..  code-block:: python
     :linenos:
 
-    import eqsn
+    from eqsn import EQSN
+
+    # create EQSN control object
+    eqsn = EQSN()
 
     # Create two Qubits, with ids A and B
     eqsn.new_qubit('A')
@@ -21,5 +24,5 @@ Below, an example is shown, how an EPR state can be created.
     # Measure both Qubits
     m1 = eqsn.measure('A')
     m2 = eqsn.measure('B')
-    
+
     print("measured %d and %d." % (m1, m2))

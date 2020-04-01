@@ -215,7 +215,6 @@ class QubitThread(object):
             elif item[0] == CONTROLLED_GATE:
                 self.apply_controlled_gate(item[1], item[2], item[3])
             elif item[0] == MEASURE:
-                print("Measure called")
                 sys.stdout.flush()
                 self.measure(item[1], item[2])
                 # no qubit left, terminate

@@ -43,6 +43,8 @@ class WorkerProcess(object):
                 self.measure_non_destructive(item[1], item[2])
             elif item[0] == ADD_MERGED_QUBITS_TO_DICT:
                 self.add_merged_qubits_to_thread(item[1], item[2])
+            elif item[0] == DOUBLE_GATE:
+                self.apply_two_qubit_gate(item[1], item[2], item[3])
             else:
                 raise ValueError("Command does not exist!")
 

@@ -148,14 +148,13 @@ class QubitThread(object):
 
     def apply_two_qubit_gate(self, mat, q_id1, q_id2):
         # Bring the qubits in the right order
-        i1 = self.qubits.index(q_id1)
         i2 = self.qubits.index(q_id2)
         if i2 > 0:
             new_i1 = i2-1
-            self.swap_qubits(i1, new_i1)
+            self.swap_qubits(q_id1, self.qubits[new_i1])
         else:
-            self.swap_qubits(q_id1, 0)
-            self.swap_qubits(q_id2, 1)
+            self.swap_qubits(q_id1, self.qubits[0])
+            self.swap_qubits(q_id2, self.qubits[1])
         apply_mat = mat
         nr1 = self.qubits.index(q_id1)
         total_amount = len(self.qubits)

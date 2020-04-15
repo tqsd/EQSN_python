@@ -13,6 +13,7 @@ MERGE_SEND = 5
 MEASURE_NON_DESTRUCTIVE = 7
 NEW_QUBIT = 8
 ADD_MERGED_QUBITS_TO_DICT = 9
+DOUBLE_GATE = 11
 
 
 class QubitThread(object):
@@ -122,6 +123,48 @@ class QubitThread(object):
         channel.put(dp(self.qubit))
         chanel2.put(dp(self.qubits))
         return
+
+    def swap_qubits(self, q_id1, q_id2):
+        """
+        Swaps the position of qubit q_id1 with q_id2
+        in the statevector.
+        """
+        def cnot(q_id1, q_id2):
+            mat = np.asarray([[0, 1], [1, 0]])
+            self.apply_controlled_gate(mat, q_id1, q_id2)
+
+        # Check if they are the same ids
+        if q_id1 == q_id2:
+            return
+
+        # Perform swap
+        cnot(q_id1, q_id2)
+        cnot(q_id2, q_id1)
+        cnot(q_id1, q_id2)
+        # Change ordering in the list
+        i1 = self.qubits.index(q_id1)
+        i2 = self.qubits.index(q_id2)
+        self.qubits[i1], self.qubits[i2] = self.qubits[i2], self.qubits[i1]
+
+    def apply_two_qubit_gate(self, mat, q_id1, q_id2):
+        # Bring the qubits in the right order
+        i2 = self.qubits.index(q_id2)
+        if i2 > 0:
+            new_i1 = i2-1
+            self.swap_qubits(q_id1, self.qubits[new_i1])
+        else:
+            self.swap_qubits(q_id1, self.qubits[0])
+            self.swap_qubits(q_id2, self.qubits[1])
+        apply_mat = mat
+        nr1 = self.qubits.index(q_id1)
+        total_amount = len(self.qubits)
+        before = nr1
+        after = total_amount - nr1 - 2
+        if before > 0:
+            apply_mat = np.kron(np.eye(2 ** before), apply_mat)
+        if after > 0:
+            apply_mat = np.kron(apply_mat, np.eye(2 ** after))
+        self.qubit = np.dot(apply_mat, self.qubit)
 
     def measure_non_destructive(self, q_id, ret_channel):
         """
@@ -235,5 +278,7 @@ class QubitThread(object):
                 return
             elif item[0] == MEASURE_NON_DESTRUCTIVE:
                 self.measure_non_destructive(item[1], item[2])
+            elif item[0] == DOUBLE_GATE:
+                self.apply_two_qubit_gate(item[1], item[2], item[3])
             else:
                 raise ValueError("Command does not exist!")

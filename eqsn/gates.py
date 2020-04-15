@@ -203,6 +203,9 @@ class EQSN(object):
         q = self.shared_dict.get_queues_for_ids([q_id1])[0]
         q.put([CONTROLLED_GATE, x, q_id1, q_id2])
 
+    def custom_two_qubit_gate(self, q_id1, q_id2, gate):
+        pass
+
     def measure(self, q_id, non_destructive=False):
         """
         Measures a qubit with an id. If non_destructive is False, the qubit

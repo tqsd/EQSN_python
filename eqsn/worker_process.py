@@ -5,7 +5,8 @@ from queue import Queue
 from eqsn.shared_dict import SharedDict
 from eqsn.qubit_thread import SINGLE_GATE, MERGE_SEND, MERGE_ACCEPT, MEASURE,\
                 MEASURE_NON_DESTRUCTIVE, \
-                CONTROLLED_GATE, NEW_QUBIT, ADD_MERGED_QUBITS_TO_DICT, QubitThread
+                CONTROLLED_GATE, NEW_QUBIT, ADD_MERGED_QUBITS_TO_DICT, \
+                DOUBLE_GATE, QubitThread
 
 
 class WorkerProcess(object):
@@ -83,6 +84,11 @@ class WorkerProcess(object):
         self.shared_dict.send_all_threads(None)
         self.shared_dict.stop_all_threads()
         self.shared_dict.stop_shared_dict()
+
+    def apply_two_qubit_gate(self, gate, q_id1, q_id2):
+        self.merge_qubits(q_id1, q_id2)
+        q = self.shared_dict.get_queues_for_ids([q_id1])[0]
+        q.put([DOUBLE_GATE, gate, q_id1, q_id2])
 
     def apply_single_gate(self, gate, q_id):
         """

@@ -13,6 +13,7 @@ MERGE_SEND = 5
 MEASURE_NON_DESTRUCTIVE = 7
 NEW_QUBIT = 8
 ADD_MERGED_QUBITS_TO_DICT = 9
+DOUBLE_GATE = 11
 
 
 class QubitThread(object):
@@ -145,7 +146,7 @@ class QubitThread(object):
         i2 = self.qubits.index(q_id2)
         self.qubits[i1], self.qubits[i2] = self.qubits[i2], self.qubits[i1]
 
-    def apply_two_qubit_gate(self, q_id1, q_id2, gate):
+    def apply_two_qubit_gate(self, mat, q_id1, q_id2):
         # Bring the qubits in the right order
         i1 = self.qubits.index(q_id1)
         i2 = self.qubits.index(q_id2)
@@ -155,7 +156,7 @@ class QubitThread(object):
         else:
             self.swap_qubits(q_id1, 0)
             self.swap_qubits(q_id2, 1)
-        apply_mat = gate
+        apply_mat = mat
         nr1 = self.qubits.index(q_id1)
         total_amount = len(self.qubits)
         before = nr1
@@ -278,5 +279,7 @@ class QubitThread(object):
                 return
             elif item[0] == MEASURE_NON_DESTRUCTIVE:
                 self.measure_non_destructive(item[1], item[2])
+            elif item[0] == DOUBLE_GATE:
+                self.apply_two_qubit_gate(item[1], item[2], item[3])
             else:
                 raise ValueError("Command does not exist!")

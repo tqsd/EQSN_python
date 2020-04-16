@@ -4,7 +4,7 @@ import os
 from queue import Queue
 from eqsn.shared_dict import SharedDict
 from eqsn.qubit_thread import SINGLE_GATE, MERGE_SEND, MERGE_ACCEPT, MEASURE,\
-                MEASURE_NON_DESTRUCTIVE, \
+                MEASURE_NON_DESTRUCTIVE, GIVE_STATEVECTOR, \
                 CONTROLLED_GATE, NEW_QUBIT, ADD_MERGED_QUBITS_TO_DICT, \
                 DOUBLE_GATE, QubitThread
 
@@ -43,6 +43,8 @@ class WorkerProcess(object):
                 self.measure_non_destructive(item[1], item[2])
             elif item[0] == ADD_MERGED_QUBITS_TO_DICT:
                 self.add_merged_qubits_to_thread(item[1], item[2])
+            elif item[0] == GIVE_STATEVECTOR:
+                self.give_statevector_for(item[1], item[2])
             elif item[0] == DOUBLE_GATE:
                 self.apply_two_qubit_gate(item[1], item[2], item[3])
             else:
@@ -98,6 +100,10 @@ class WorkerProcess(object):
         """
         q = self.shared_dict.get_queues_for_ids([q_id])[0]
         q.put([SINGLE_GATE, gate, q_id])
+
+    def give_statevector_for(self, q_id, channel):
+        q = self.shared_dict.get_queues_for_ids([q_id])[0]
+        q.put([GIVE_STATEVECTOR, channel])
 
     def apply_controlled_gate(self, gate, q_id1, q_id2):
         """

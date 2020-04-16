@@ -2,7 +2,7 @@ import multiprocessing
 import logging
 import numpy as np
 from eqsn.qubit_thread import SINGLE_GATE, MERGE_SEND, MERGE_ACCEPT, MEASURE,\
-                MEASURE_NON_DESTRUCTIVE, GIVE_STATEVECTOR, \
+                MEASURE_NON_DESTRUCTIVE, GIVE_STATEVECTOR, DOUBLE_GATE, \
                 CONTROLLED_GATE, NEW_QUBIT, ADD_MERGED_QUBITS_TO_DICT
 from eqsn.shared_dict import SharedDict
 from eqsn.worker_process import WorkerProcess
@@ -151,6 +151,13 @@ class EQSN(object):
         q = self.shared_dict.get_queues_for_ids([q_id])[0]
         q.put([SINGLE_GATE, x, q_id])
 
+    def custom_gate(self, q_id, gate):
+        """
+        Applies a custom gate to the qubit with q_id.
+        """
+        q = self.shared_dict.get_queues_for_ids([q_id])[0]
+        q.put([SINGLE_GATE, gate, q_id])
+
     def merge_qubits(self, q_id1, q_id2):
         """
         Merges two qubits to one process, if they are not already
@@ -209,6 +216,16 @@ class EQSN(object):
         q.put([GIVE_STATEVECTOR, q_id, ret])
         qubits, vector = ret.get()
         return qubits, vector
+
+    def custom_two_qubit_gate(self, q_id1, q_id2, gate):
+        self.merge_qubits(q_id1, q_id2)
+        q = self.shared_dict.get_queues_for_ids([q_id1])[0]
+        q.put([DOUBLE_GATE, gate, q_id1, q_id2])
+
+    def custom_controlled_gate(self, applied_to_id, controlled_by_id, gate):
+        self.merge_qubits(applied_to_id, controlled_by_id)
+        q = self.shared_dict.get_queues_for_ids([applied_to_id])[0]
+        q.put([CONTROLLED_GATE, gate, applied_to_id, controlled_by_id])
 
     def measure(self, q_id, non_destructive=False):
         """

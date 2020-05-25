@@ -1,19 +1,20 @@
-import sys
-import threading
+from eqsn import EQSN
 
-sys.path.append("../eqsn/")
-from gates import new_qubit, cnot_gate, H_gate, X_gate, stop_all, measure
 
 def test_non_destructive_measurement():
+    q_sim = EQSN()
     id1 = str(1)
-    new_qubit(id1)
-    H_gate(id1)
-    m = measure(id1, non_destructive=True)
-    m2 = measure(id1)
+    q_sim.new_qubit(id1)
+    q_sim.H_gate(id1)
+    m = q_sim.measure(id1, non_destructive=True)
+    m2 = q_sim.measure(id1)
     print("Measured %d." % m)
     assert m == m2
     print("Test was successfull!")
-    stop_all()
+    q_sim.stop_all()
+    print("Stopped succesfully!")
+    exit(0)
 
 
-test_non_destructive_measurement()
+if __name__ == "__main__":
+    test_non_destructive_measurement()

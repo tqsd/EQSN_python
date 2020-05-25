@@ -1,16 +1,17 @@
-import sys
 import threading
+from eqsn import EQSN
 
-sys.path.append("../eqsn/")
-from gates import new_qubit, cnot_gate, H_gate, X_gate, stop_all, measure
 
 def test_call_single_qubit_gate_from_threads():
+    q_sim = EQSN()
+
     def call_X_gate_n_times(id, n):
         for c in range(n):
             # print("Apply %d time." % c)
-            X_gate(id)
+            q_sim.X_gate(id)
+
     id1 = str(1)
-    new_qubit(id1)
+    q_sim.new_qubit(id1)
     n = 999
     nr_threads = 5
     thread_list = []
@@ -20,11 +21,12 @@ def test_call_single_qubit_gate_from_threads():
         thread_list.append(t)
     for t in thread_list:
         t.join()
-    m = measure(id1)
+    m = q_sim.measure(id1)
     print("Measured %d." % m)
     assert m == 1
     print("Test was successfull!")
-    stop_all()
+    q_sim.stop_all()
 
 
-test_call_single_qubit_gate_from_threads()
+if __name__ == "__main__":
+    test_call_single_qubit_gate_from_threads()

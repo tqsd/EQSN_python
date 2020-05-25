@@ -1,14 +1,16 @@
-import sys
+from eqsn import EQSN
 
-sys.path.append("../eqsn/")
-from gates import *
 
 def test_merge():
+    q_sim = EQSN()
     id1 = str(1)
     id2 = str(2)
-    new_qubit(id1)
-    new_qubit(id2)
-    merge_qubits(id1, id2)
-    stop_all()
+    q_sim.new_qubit(id1)
+    q_sim.new_qubit(id2)
+    q_sim.merge_qubits(id1, id2)
+    q_sim.stop_all()
+    print("merging was succesfull")
 
-test_merge()
+
+if __name__ == "__main__":
+    test_merge()

@@ -2,5 +2,9 @@ src/__pycache__/
 eqsn/__pycache__/
 venv/
 reinstall_eqsn.sh
+.idea/
+dist/
+EQSN.egg-info/
+build
 /.vs/EQSN_python/v16
 /.vs

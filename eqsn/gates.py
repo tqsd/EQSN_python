@@ -28,7 +28,6 @@ class EQSN(object):
             raise ValueError("Use get instance to get this class")
         EQSN.__instance = self
         self.manager = multiprocessing.Manager()
-        self.shared_dict = SharedDict.get_instance()
         cpu_count = multiprocessing.cpu_count()
         self.process_queue_list = []
         for _ in range(cpu_count):
@@ -39,6 +38,8 @@ class EQSN(object):
             self.process_queue_list.append((p, q))
         self.process_picker = ProcessPicker.get_instance(
             cpu_count, self.process_queue_list)
+        # create the shared dict after all the processes have been created.
+        self.shared_dict = SharedDict.get_instance()
 
     def new_qubit(self, q_id):
         """

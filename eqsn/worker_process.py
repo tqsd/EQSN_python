@@ -13,13 +13,14 @@ class WorkerProcess(object):
 
     def __init__(self, queue):
         self.queue = queue
-        # Get a new instance, since their might be one from the old process
-        self.shared_dict = SharedDict.get_new_instance()
 
     def run(self):
         """
         Run in loop and wait to receive tasks to perform.
         """
+        # Get a new instance, since their might be one from the old process
+        self.shared_dict = SharedDict.get_new_instance()
+
         amount_single_gate = 0
         while True:
             item = self.queue.get()

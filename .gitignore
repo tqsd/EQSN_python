@@ -6,3 +6,5 @@ reinstall_eqsn.sh
 dist/
 EQSN.egg-info/
 build
+/.vs/EQSN_python/v16
+/.vs

@@ -18,6 +18,11 @@ DOUBLE_GATE = 11
 
 
 class QubitThread(object):
+    """
+    The Qubit thread is the smallest object in EQSN.
+    It consists of a statevector and the Qubit IDs of the state vector.
+    Most operations here can be applid asynchronously.
+    """
 
     def __init__(self, q_id, queue):
         """
@@ -42,15 +47,15 @@ class QubitThread(object):
 
         logging.debug("Qubit thread with qubit %s has been created.", q_id)
 
-    def apply_single_gate(self, mat, q_id):
+    def apply_single_gate(self, gate, q_id):
         """
         Applys a single gate to a qubit.
 
         Args:
-            mat (np.array): 2x2 unitary array.
+            gate (np.array): 2x2 unitary array.
             id (String): Qubit on which the gate should be applied to.
         """
-        apply_mat = mat
+        apply_mat = gate
         nr = self.qubits.index(q_id)
         total_amount = len(self.qubits)
         before = nr
@@ -62,11 +67,17 @@ class QubitThread(object):
         self.qubit = np.dot(apply_mat, self.qubit)
 
     def give_statevector(self, channel):
+        """
+        Sends the Qubit IDs and their state vectors over a channel.
+
+        Args:
+            channel(Queue): Channel to return the requested data to.
+        """
         channel.put((dp(self.qubits), dp(self.qubit)))
 
     def apply_controlled_gate(self, mat, q_id1, q_id2):
         """
-        Apply a controlled gate to
+        Applies a controlled gate to q_id1
         """
         first_mat = 1
         second_mat = 1
@@ -111,7 +122,11 @@ class QubitThread(object):
 
     def merge_accept(self, channel):
         """
-        Receive another process to merge it with this one.
+        Receive the statevector and qubit information of another
+        thread with this thread and merge the vectors.
+
+        Args:
+            channel(Queue): channel to receive qubit ids and statevectors from.
         """
         ids = channel.get()
         vector = channel.get()
@@ -122,6 +137,11 @@ class QubitThread(object):
     def merge_send(self, channel, chanel2):
         """
         Send own process data to another process and suicide.
+
+        Args:
+            channel(Queue): Channel to send own data to other Qubit Thread.
+            channel2(Queue): Channel to send qubit ids to parent, to update
+                             the qubit ids in its dictionary.
         """
         channel.put(dp(self.qubits))
         channel.put(dp(self.qubit))
@@ -132,6 +152,9 @@ class QubitThread(object):
         """
         Swaps the position of qubit q_id1 with q_id2
         in the statevector.
+
+        q_id1(String): Qubit id of one of the qubits to swap.
+        q_id2(String): Qubit id of the other qubit to swap.
         """
         def cnot(q_id1, q_id2):
             mat = np.asarray([[0, 1], [1, 0]])
@@ -150,7 +173,15 @@ class QubitThread(object):
         i2 = self.qubits.index(q_id2)
         self.qubits[i1], self.qubits[i2] = self.qubits[i2], self.qubits[i1]
 
-    def apply_two_qubit_gate(self, mat, q_id1, q_id2):
+    def apply_two_qubit_gate(self, gate, q_id1, q_id2):
+        """
+        Applies a two qubit gate to the statevector.
+
+        Args:
+            gate(np.ndarray): 4x4 unitary matrix
+            q_id1(String): First qubit id.
+            q_id2(String): Second qubit id.
+        """
         # Bring the qubits in the right order
         i2 = self.qubits.index(q_id2)
         if i2 > 0:
@@ -159,7 +190,7 @@ class QubitThread(object):
         else:
             self.swap_qubits(q_id1, self.qubits[0])
             self.swap_qubits(q_id2, self.qubits[1])
-        apply_mat = mat
+        apply_mat = gate
         nr1 = self.qubits.index(q_id1)
         total_amount = len(self.qubits)
         before = nr1
@@ -170,9 +201,13 @@ class QubitThread(object):
             apply_mat = np.kron(apply_mat, np.eye(2 ** after))
         self.qubit = np.dot(apply_mat, self.qubit)
 
-    def measure_non_destructive(self, q_id, ret_channel):
+    def measure_non_destructive(self, q_id, channel):
         """
         Perform a non destructive measurement on qubit with the id.
+
+        Args:
+            q_id(String): ID of the Qubit to measure.
+            channel(Queue): Channel to transmit measurement result to.
         """
         # determine probability for |1>
         measure_vec = np.array([1, 0], dtype=np.csingle)
@@ -194,11 +229,11 @@ class QubitThread(object):
         reduction_mat = None
         if meas_res == 0:
             # |0> has been measured
-            ret_channel.put(0)
+            channel.put(0)
             reduction_mat = np.array([[1, 0], [0, 0]], dtype=np.csingle)
         else:
             # |1> has been measured
-            ret_channel.put(1)
+            channel.put(1)
             reduction_mat = np.array([[0, 0], [0, 1]], dtype=np.csingle)
         if before > 0:
             reduction_mat = np.kron(
@@ -212,9 +247,13 @@ class QubitThread(object):
         norm = np.linalg.norm(self.qubit)
         self.qubit = self.qubit / norm
 
-    def measure(self, q_id, ret_channel):
+    def measure(self, q_id, channel):
         """
         Perform a destructive measurement on qubit with the id.
+
+        Args:
+            q_id(String): ID of the Qubit to measure.
+            channel(Queue): Channel to transmit measurement result to.
         """
         # determine probability for |1>
         measure_vec = np.array([1, 0], dtype=np.csingle)
@@ -236,11 +275,11 @@ class QubitThread(object):
         reduction_mat = None
         if meas_res == 0:
             # |0> has been measured
-            ret_channel.put(0)
+            channel.put(0)
             reduction_mat = np.array([1, 0], dtype=np.csingle)
         else:
             # |1> has been measured
-            ret_channel.put(1)
+            channel.put(1)
             reduction_mat = np.array([0, 1], dtype=np.csingle)
         if before > 0:
             reduction_mat = np.kron(
@@ -278,6 +317,7 @@ class QubitThread(object):
             elif item[0] == MERGE_ACCEPT:
                 self.merge_accept(item[1])
             elif item[0] == MERGE_SEND:
+                # After merge, this thread is not needed anymore
                 self.merge_send(item[1], item[2])
                 return
             elif item[0] == MEASURE_NON_DESTRUCTIVE:

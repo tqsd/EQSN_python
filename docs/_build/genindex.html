@@ -24,10 +24,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -88,7 +88,17 @@
               <p class="caption"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#via-pip">Via pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#from-source">From source</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="design.html">Design Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gates.html">Gates Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processes.html">Worker Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qubit_thread.html">Qubit Thread</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="examples/create_and_measure.html">Create Qubit and Measure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/epr_creation.html">EPR State Creation</a></li>
@@ -160,8 +170,168 @@
 <h1 id="index">Index</h1>
 
 <div class="genindex-jumpbox">
+ <a href="#C"><strong>C</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#H"><strong>H</strong></a>
+ | <a href="#K"><strong>K</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#X"><strong>X</strong></a>
+ | <a href="#Y"><strong>Y</strong></a>
+ | <a href="#Z"><strong>Z</strong></a>
  
 </div>
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gates.html#eqsn.gates.EQSN.cnot_gate">cnot_gate() (eqsn.gates.EQSN method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gates.html#eqsn.gates.EQSN.cphase_gate">cphase_gate() (eqsn.gates.EQSN method)</a>
+</li>
+      <li><a href="gates.html#eqsn.gates.EQSN.custom_gate">custom_gate() (eqsn.gates.EQSN method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gates.html#eqsn.gates.EQSN">EQSN (class in eqsn.gates)</a>
+</li>
+      <li>
+    eqsn.gates
+
+      <ul>
+        <li><a href="gates.html#module-eqsn.gates">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    eqsn.qubit_thread
+
+      <ul>
+        <li><a href="qubit_thread.html#module-eqsn.qubit_thread">module</a>
+</li>
+      </ul></li>
+      <li>
+    eqsn.worker_process
+
+      <ul>
+        <li><a href="processes.html#module-eqsn.worker_process">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gates.html#eqsn.gates.EQSN.H_gate">H_gate() (eqsn.gates.EQSN method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="K">K</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gates.html#eqsn.gates.EQSN.K_gate">K_gate() (eqsn.gates.EQSN method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gates.html#eqsn.gates.EQSN.measure">measure() (eqsn.gates.EQSN method)</a>
+</li>
+      <li><a href="gates.html#eqsn.gates.EQSN.merge_qubits">merge_qubits() (eqsn.gates.EQSN method)</a>
+</li>
+      <li>
+    module
+
+      <ul>
+        <li><a href="gates.html#module-eqsn.gates">eqsn.gates</a>
+</li>
+        <li><a href="qubit_thread.html#module-eqsn.qubit_thread">eqsn.qubit_thread</a>
+</li>
+        <li><a href="processes.html#module-eqsn.worker_process">eqsn.worker_process</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gates.html#eqsn.gates.EQSN.new_qubit">new_qubit() (eqsn.gates.EQSN method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gates.html#eqsn.gates.EQSN.RX_gate">RX_gate() (eqsn.gates.EQSN method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gates.html#eqsn.gates.EQSN.RY_gate">RY_gate() (eqsn.gates.EQSN method)</a>
+</li>
+      <li><a href="gates.html#eqsn.gates.EQSN.RZ_gate">RZ_gate() (eqsn.gates.EQSN method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gates.html#eqsn.gates.EQSN.S_gate">S_gate() (eqsn.gates.EQSN method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gates.html#eqsn.gates.EQSN.stop_all">stop_all() (eqsn.gates.EQSN method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gates.html#eqsn.gates.EQSN.T_gate">T_gate() (eqsn.gates.EQSN method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="X">X</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gates.html#eqsn.gates.EQSN.X_gate">X_gate() (eqsn.gates.EQSN method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Y">Y</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gates.html#eqsn.gates.EQSN.Y_gate">Y_gate() (eqsn.gates.EQSN method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Z">Z</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="gates.html#eqsn.gates.EQSN.Z_gate">Z_gate() (eqsn.gates.EQSN method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 
 
            </div>

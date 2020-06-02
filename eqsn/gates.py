@@ -187,29 +187,33 @@ class EQSN(object):
                 qubits, q_id2)
             self.shared_dict.release_shared_dict()
 
-    def cnot_gate(self, q_id1, q_id2):
+    def cnot_gate(self, applied_to_id, controlled_by_id):
         """
         Applies a controlled X gate, where the gate is applied to
         q_id1 and controlled by q_id2.
 
         Args:
-            q_id1 (String): Id of the Qubit on which the X gate is applied.
-            q_id2 (String): Id of the Qubit which controls the gate.
+            applied_to_id (String): Id of the Qubit on which the X gate is applied.
+            controlled_by_id (String): Id of the Qubit which controls the gate.
         """
         x = np.array([[0, 1], [1, 0]], dtype=np.csingle)
-        self.merge_qubits(q_id1, q_id2)
-        q = self.shared_dict.get_queues_for_ids([q_id1])[0]
-        q.put([CONTROLLED_GATE, x, q_id1, q_id2])
+        self.merge_qubits(applied_to_id, controlled_by_id)
+        q = self.shared_dict.get_queues_for_ids([applied_to_id])[0]
+        q.put([CONTROLLED_GATE, x, applied_to_id, controlled_by_id])
 
-    def cphase_gate(self, q_id1, q_id2):
+    def cphase_gate(self, applied_to_id, controlled_by_id):
         """
         Applies a controlled Z gate, where the gate is applied to
         q_id1 and controlled by q_id2.
+
+        Args:
+            applied_to_id (String): Id of the Qubit on which the X gate is applied.
+            controlled_by_id (String): Id of the Qubit which controls the gate.
         """
         x = np.array([[0, 1], [0, -1]], dtype=np.csingle)
-        self.merge_qubits(q_id1, q_id2)
-        q = self.shared_dict.get_queues_for_ids([q_id1])[0]
-        q.put([CONTROLLED_GATE, x, q_id1, q_id2])
+        self.merge_qubits(applied_to_id, controlled_by_id)
+        q = self.shared_dict.get_queues_for_ids([applied_to_id])[0]
+        q.put([CONTROLLED_GATE, x, applied_to_id, controlled_by_id])
 
     def give_statevector_for(self, q_id):
         ret = self.manager.Queue()

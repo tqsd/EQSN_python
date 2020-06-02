@@ -1,0 +1,365 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Gates Class &mdash; EQSN  documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="_static/favicon.png"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Worker Process" href="processes.html" />
+    <link rel="prev" title="Design Overview" href="design.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> EQSN
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#via-pip">Via pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#from-source">From source</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="design.html">Design Overview</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Gates Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processes.html">Worker Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qubit_thread.html">Qubit Thread</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/create_and_measure.html">Create Qubit and Measure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/epr_creation.html">EPR State Creation</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">EQSN</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="design.html">Design Overview</a> &raquo;</li>
+        
+      <li>Gates Class</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/gates.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gates-class">
+<h1>Gates Class<a class="headerlink" href="#gates-class" title="Permalink to this headline">¶</a></h1>
+<p>The gate class is the main interaction class for users of EQSN.
+From this class, qubits can be created, measured, and gates can be applied.</p>
+<span class="target" id="module-eqsn.gates"></span><dl class="py class">
+<dt id="eqsn.gates.EQSN">
+<em class="property">class </em><code class="sig-prename descclassname">eqsn.gates.</code><code class="sig-name descname">EQSN</code><a class="headerlink" href="#eqsn.gates.EQSN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main object of EQSN, with this object, all of the Qubits can be controlled.
+All functions are threadsafe, but at the moment, only one instance should be
+used.</p>
+<dl class="py method">
+<dt id="eqsn.gates.EQSN.H_gate">
+<code class="sig-name descname">H_gate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.gates.EQSN.H_gate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies the Hadamard gate to the Qubit with q_id.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.gates.EQSN.K_gate">
+<code class="sig-name descname">K_gate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.gates.EQSN.K_gate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies the K gate to the Qubit with q_id.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.gates.EQSN.RX_gate">
+<code class="sig-name descname">RX_gate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em>, <em class="sig-param"><span class="n">rad</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.gates.EQSN.RX_gate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies the T gate to the Qubit with q_id.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.gates.EQSN.RY_gate">
+<code class="sig-name descname">RY_gate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em>, <em class="sig-param"><span class="n">rad</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.gates.EQSN.RY_gate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies the T gate to the Qubit with q_id.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.gates.EQSN.RZ_gate">
+<code class="sig-name descname">RZ_gate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em>, <em class="sig-param"><span class="n">rad</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.gates.EQSN.RZ_gate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies the T gate to the Qubit with q_id.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.gates.EQSN.S_gate">
+<code class="sig-name descname">S_gate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.gates.EQSN.S_gate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies the S gate to the Qubit with q_id.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.gates.EQSN.T_gate">
+<code class="sig-name descname">T_gate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.gates.EQSN.T_gate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies the T gate to the Qubit with q_id.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.gates.EQSN.X_gate">
+<code class="sig-name descname">X_gate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.gates.EQSN.X_gate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies the Pauli X gate to the Qubit with q_id.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.gates.EQSN.Y_gate">
+<code class="sig-name descname">Y_gate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.gates.EQSN.Y_gate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies the Pauli Y gate to the Qubit with q_id.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.gates.EQSN.Z_gate">
+<code class="sig-name descname">Z_gate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.gates.EQSN.Z_gate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies the Pauli Z gate to the Qubit with q_id.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.gates.EQSN.cnot_gate">
+<code class="sig-name descname">cnot_gate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id1</span></em>, <em class="sig-param"><span class="n">q_id2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.gates.EQSN.cnot_gate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies a controlled X gate, where the gate is applied to
+q_id1 and controlled by q_id2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q_id1</strong> (<em>String</em>) – Id of the Qubit on which the X gate is applied.</p></li>
+<li><p><strong>q_id2</strong> (<em>String</em>) – Id of the Qubit which controls the gate.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.gates.EQSN.cphase_gate">
+<code class="sig-name descname">cphase_gate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id1</span></em>, <em class="sig-param"><span class="n">q_id2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.gates.EQSN.cphase_gate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies a controlled Z gate, where the gate is applied to
+q_id1 and controlled by q_id2.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.gates.EQSN.custom_gate">
+<code class="sig-name descname">custom_gate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em>, <em class="sig-param"><span class="n">gate</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.gates.EQSN.custom_gate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies a custom gate to the qubit with q_id.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.gates.EQSN.measure">
+<code class="sig-name descname">measure</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em>, <em class="sig-param"><span class="n">non_destructive</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.gates.EQSN.measure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Measures a qubit with an id. If non_destructive is False, the qubit
+is removed from the system, otherwise, the qubit stays in the system
+after measurement, but its wavefunction collapses.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>String</em>) – Id of the Qubit which should be measured.</p></li>
+<li><p><strong>non_destructive</strong> (<em>bool</em>) – If a qubit should not be removed from the
+system after measurement.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.gates.EQSN.merge_qubits">
+<code class="sig-name descname">merge_qubits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id1</span></em>, <em class="sig-param"><span class="n">q_id2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.gates.EQSN.merge_qubits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges two qubits to one process, if they are not already
+running in the same process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q_id1</strong> (<em>String</em>) – Id of the Qubit merged into q_id2.</p></li>
+<li><p><strong>q_id2</strong> (<em>String</em>) – Id of the Qubit merged with q_id1.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.gates.EQSN.new_qubit">
+<code class="sig-name descname">new_qubit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.gates.EQSN.new_qubit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new qubit with an id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>q_id</strong> (<em>String</em>) – Id of the new qubit.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.gates.EQSN.stop_all">
+<code class="sig-name descname">stop_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.gates.EQSN.stop_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops the simulator from running.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Benjamin Zanger, Stephen DiAdamo, Janis Nötzel
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

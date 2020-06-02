@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>EQSN: An Effective Quantum Simulator for Networks &mdash; EQSN  documentation</title>
+  <title>Worker Process &mdash; EQSN  documentation</title>
   
 
   
@@ -37,7 +37,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Introduction" href="intro.html" /> 
+    <link rel="next" title="Qubit Thread" href="qubit_thread.html" />
+    <link rel="prev" title="Gates Class" href="gates.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -51,7 +52,7 @@
           
 
           
-            <a href="#" class="icon icon-home"> EQSN
+            <a href="index.html" class="icon icon-home"> EQSN
           
 
           
@@ -86,16 +87,16 @@
             
             
               <p class="caption"><span class="caption-text">Contents</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Install</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="install.html#via-pip">Via pip</a></li>
 <li class="toctree-l2"><a class="reference internal" href="install.html#from-source">From source</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="design.html">Design Overview</a><ul>
+<li class="toctree-l1 current"><a class="reference internal" href="design.html">Design Overview</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="gates.html">Gates Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="processes.html">Worker Process</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Worker Process</a></li>
 <li class="toctree-l2"><a class="reference internal" href="qubit_thread.html">Qubit Thread</a></li>
 </ul>
 </li>
@@ -118,7 +119,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">EQSN</a>
+          <a href="index.html">EQSN</a>
         
       </nav>
 
@@ -147,15 +148,17 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="#">Docs</a> &raquo;</li>
+      <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>EQSN: An Effective Quantum Simulator for Networks</li>
+          <li><a href="design.html">Design Overview</a> &raquo;</li>
+        
+      <li>Worker Process</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/processes.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -168,31 +171,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="eqsn-an-effective-quantum-simulator-for-networks">
-<h1>EQSN: An Effective Quantum Simulator for Networks<a class="headerlink" href="#eqsn-an-effective-quantum-simulator-for-networks" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Contents</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="install.html#via-pip">Via pip</a></li>
-<li class="toctree-l2"><a class="reference internal" href="install.html#from-source">From source</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="design.html">Design Overview</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="gates.html">Gates Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="processes.html">Worker Process</a></li>
-<li class="toctree-l2"><a class="reference internal" href="qubit_thread.html">Qubit Thread</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples/create_and_measure.html">Create Qubit and Measure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/epr_creation.html">EPR State Creation</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
+  <div class="section" id="worker-process">
+<h1>Worker Process<a class="headerlink" href="#worker-process" title="Permalink to this headline">¶</a></h1>
+<p>The worker process is a parent of a set of qubit threads. It is responsible to
+increase the concurrency of the EQSN package. Using a dictionary, it keeps track
+of all qubits within its thread and provides an interface for the gates class.</p>
+<span class="target" id="module-eqsn.worker_process"></span></div>
 
 
            </div>

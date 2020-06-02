@@ -8,4 +8,5 @@ EQSN: An Effective Quantum Simulator for Networks
 
     intro
     install
+    design
     examples

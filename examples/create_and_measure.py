@@ -1,7 +1,4 @@
-import sys
-
-sys.path.append("../eqsn/")
-from gates import EQSN
+from eqsn import EQSN
 
 
 if __name__ == "__main__":

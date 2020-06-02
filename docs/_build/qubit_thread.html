@@ -176,7 +176,131 @@
 <p>A qubit thread object contains a list of qubits and there statevectors. The class
 provides functionality for manipulating the qubits, such as measuring them or
 applying gates.</p>
-<span class="target" id="module-eqsn.qubit_thread"></span></div>
+<span class="target" id="module-eqsn.qubit_thread"></span><dl class="py class">
+<dt id="eqsn.qubit_thread.QubitThread">
+<em class="property">class </em><code class="sig-prename descclassname">eqsn.qubit_thread.</code><code class="sig-name descname">QubitThread</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em>, <em class="sig-param"><span class="n">queue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.qubit_thread.QubitThread" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Qubit thread is the smallest object in EQSN.
+It consists of a statevector and the Qubit IDs of the state vector.
+Most operations here can be applid asynchronously.</p>
+<dl class="py method">
+<dt id="eqsn.qubit_thread.QubitThread.apply_controlled_gate">
+<code class="sig-name descname">apply_controlled_gate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mat</span></em>, <em class="sig-param"><span class="n">q_id1</span></em>, <em class="sig-param"><span class="n">q_id2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.qubit_thread.QubitThread.apply_controlled_gate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies a controlled gate to q_id1</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.qubit_thread.QubitThread.apply_single_gate">
+<code class="sig-name descname">apply_single_gate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gate</span></em>, <em class="sig-param"><span class="n">q_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.qubit_thread.QubitThread.apply_single_gate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applys a single gate to a qubit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gate</strong> (<em>np.array</em>) – 2x2 unitary array.</p></li>
+<li><p><strong>id</strong> (<em>String</em>) – Qubit on which the gate should be applied to.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.qubit_thread.QubitThread.apply_two_qubit_gate">
+<code class="sig-name descname">apply_two_qubit_gate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gate</span></em>, <em class="sig-param"><span class="n">q_id1</span></em>, <em class="sig-param"><span class="n">q_id2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.qubit_thread.QubitThread.apply_two_qubit_gate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies a two qubit gate to the statevector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gate</strong> (<em>np.ndarray</em>) – 4x4 unitary matrix</p></li>
+<li><p><strong>q_id1</strong> (<em>String</em>) – First qubit id.</p></li>
+<li><p><strong>q_id2</strong> (<em>String</em>) – Second qubit id.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.qubit_thread.QubitThread.give_statevector">
+<code class="sig-name descname">give_statevector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.qubit_thread.QubitThread.give_statevector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends the Qubit IDs and their state vectors over a channel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>channel</strong> (<em>Queue</em>) – Channel to return the requested data to.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.qubit_thread.QubitThread.measure">
+<code class="sig-name descname">measure</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em>, <em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.qubit_thread.QubitThread.measure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a destructive measurement on qubit with the id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q_id</strong> (<em>String</em>) – ID of the Qubit to measure.</p></li>
+<li><p><strong>channel</strong> (<em>Queue</em>) – Channel to transmit measurement result to.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.qubit_thread.QubitThread.measure_non_destructive">
+<code class="sig-name descname">measure_non_destructive</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em>, <em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.qubit_thread.QubitThread.measure_non_destructive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a non destructive measurement on qubit with the id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q_id</strong> (<em>String</em>) – ID of the Qubit to measure.</p></li>
+<li><p><strong>channel</strong> (<em>Queue</em>) – Channel to transmit measurement result to.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.qubit_thread.QubitThread.merge_accept">
+<code class="sig-name descname">merge_accept</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.qubit_thread.QubitThread.merge_accept" title="Permalink to this definition">¶</a></dt>
+<dd><p>Receive the statevector and qubit information of another
+thread with this thread and merge the vectors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>channel</strong> (<em>Queue</em>) – channel to receive qubit ids and statevectors from.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.qubit_thread.QubitThread.merge_send">
+<code class="sig-name descname">merge_send</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">chanel2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.qubit_thread.QubitThread.merge_send" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send own process data to another process and suicide.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<em>Queue</em>) – Channel to send own data to other Qubit Thread.</p></li>
+<li><p><strong>channel2</strong> (<em>Queue</em>) – Channel to send qubit ids to parent, to update
+the qubit ids in its dictionary.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.qubit_thread.QubitThread.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.qubit_thread.QubitThread.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run in loop and wait to receive tasks to perform.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.qubit_thread.QubitThread.swap_qubits">
+<code class="sig-name descname">swap_qubits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id1</span></em>, <em class="sig-param"><span class="n">q_id2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.qubit_thread.QubitThread.swap_qubits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Swaps the position of qubit q_id1 with q_id2
+in the statevector.</p>
+<p>q_id1(String): Qubit id of one of the qubits to swap.
+q_id2(String): Qubit id of the other qubit to swap.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 
 
            </div>

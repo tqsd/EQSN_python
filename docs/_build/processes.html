@@ -176,7 +176,158 @@
 <p>The worker process is a parent of a set of qubit threads. It is responsible to
 increase the concurrency of the EQSN package. Using a dictionary, it keeps track
 of all qubits within its thread and provides an interface for the gates class.</p>
-<span class="target" id="module-eqsn.worker_process"></span></div>
+<span class="target" id="module-eqsn.worker_process"></span><dl class="py class">
+<dt id="eqsn.worker_process.WorkerProcess">
+<em class="property">class </em><code class="sig-prename descclassname">eqsn.worker_process.</code><code class="sig-name descname">WorkerProcess</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">queue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.worker_process.WorkerProcess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Object to control a Process. Intermediate object to apply operations to the
+Qubits which are running on this Process.</p>
+<dl class="py method">
+<dt id="eqsn.worker_process.WorkerProcess.add_merged_qubits_to_thread">
+<code class="sig-name descname">add_merged_qubits_to_thread</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em>, <em class="sig-param"><span class="n">qubits</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.worker_process.WorkerProcess.add_merged_qubits_to_thread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add new Qubits from a merge to the dictionary.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.worker_process.WorkerProcess.apply_controlled_gate">
+<code class="sig-name descname">apply_controlled_gate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gate</span></em>, <em class="sig-param"><span class="n">q_id1</span></em>, <em class="sig-param"><span class="n">q_id2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.worker_process.WorkerProcess.apply_controlled_gate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies a controlled gate, where the gate is applied to
+q_id1 and controlled by q_id2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q_id1</strong> (<em>String</em>) – Id of the Qubit on which the X gate is applied.</p></li>
+<li><p><strong>q_id2</strong> (<em>String</em>) – Id of the Qubit which controls the gate.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.worker_process.WorkerProcess.apply_single_gate">
+<code class="sig-name descname">apply_single_gate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gate</span></em>, <em class="sig-param"><span class="n">q_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.worker_process.WorkerProcess.apply_single_gate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applys a single gate to a qubit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gate</strong> (<em>np.array</em>) – 2x2 unitary array.</p></li>
+<li><p><strong>id</strong> (<em>String</em>) – Qubit on which the gate should be applied to.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.worker_process.WorkerProcess.apply_two_qubit_gate">
+<code class="sig-name descname">apply_two_qubit_gate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gate</span></em>, <em class="sig-param"><span class="n">q_id1</span></em>, <em class="sig-param"><span class="n">q_id2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.worker_process.WorkerProcess.apply_two_qubit_gate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies a two qubit gate to a thread.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gate</strong> (<em>np.ndarray</em>) – 4x4 unitary matrix</p></li>
+<li><p><strong>q_id1</strong> (<em>String</em>) – First qubit id.</p></li>
+<li><p><strong>q_id2</strong> (<em>String</em>) – Second qubit id.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.worker_process.WorkerProcess.give_statevector_for">
+<code class="sig-name descname">give_statevector_for</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em>, <em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.worker_process.WorkerProcess.give_statevector_for" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends the Qubit IDs and their state vectors over a channel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q_id</strong> (<em>String</em>) – ID of the Qubit of the state vector to be returned.</p></li>
+<li><p><strong>channel</strong> (<em>Queue</em>) – Channel to return the requested data to.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.worker_process.WorkerProcess.measure">
+<code class="sig-name descname">measure</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em>, <em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.worker_process.WorkerProcess.measure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a destructive measurement on qubit with the id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q_id</strong> (<em>String</em>) – ID of the Qubit to measure.</p></li>
+<li><p><strong>channel</strong> (<em>Queue</em>) – Channel to transmit measurement result to.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.worker_process.WorkerProcess.measure_non_destructive">
+<code class="sig-name descname">measure_non_destructive</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em>, <em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.worker_process.WorkerProcess.measure_non_destructive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a non destructive measurement on qubit with the id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q_id</strong> (<em>String</em>) – ID of the Qubit to measure.</p></li>
+<li><p><strong>channel</strong> (<em>Queue</em>) – Channel to transmit measurement result to.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.worker_process.WorkerProcess.merge_accept">
+<code class="sig-name descname">merge_accept</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em>, <em class="sig-param"><span class="n">queue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.worker_process.WorkerProcess.merge_accept" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle a merge accept.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q_id</strong> (<em>String</em>) – ID of the qubit which should accept the merge.</p></li>
+<li><p><strong>channel</strong> (<em>Queue</em>) – channel to receive qubit ids and statevectors from.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.worker_process.WorkerProcess.merge_qubits">
+<code class="sig-name descname">merge_qubits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id1</span></em>, <em class="sig-param"><span class="n">q_id2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.worker_process.WorkerProcess.merge_qubits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges two qubits to one process, if they are not already
+running in the same process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q_id1</strong> (<em>String</em>) – Id of the Qubit merged into q_id2.</p></li>
+<li><p><strong>q_id2</strong> (<em>String</em>) – Id of the Qubit merged with q_id1.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.worker_process.WorkerProcess.new_qubit">
+<code class="sig-name descname">new_qubit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.worker_process.WorkerProcess.new_qubit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new qubit with an id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>String</em>) – Id of the new qubit.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.worker_process.WorkerProcess.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.worker_process.WorkerProcess.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run in loop and wait to receive tasks to perform.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.worker_process.WorkerProcess.stop_all">
+<code class="sig-name descname">stop_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.worker_process.WorkerProcess.stop_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops the simulator from running.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 
 
            </div>

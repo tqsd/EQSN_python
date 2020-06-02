@@ -23,10 +23,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -37,7 +37,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="next" title="Design Overview" href="design.html" />
     <link rel="prev" title="Introduction" href="intro.html" /> 
 </head>
 
@@ -89,7 +89,17 @@
               <p class="caption"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Install</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#via-pip">Via pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#from-source">From source</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="design.html">Design Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gates.html">Gates Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processes.html">Worker Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qubit_thread.html">Qubit Thread</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="examples/create_and_measure.html">Create Qubit and Measure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/epr_creation.html">EPR State Creation</a></li>
@@ -161,12 +171,26 @@
             
   <div class="section" id="install">
 <h1>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h1>
-<p>To install EQSN, clone the repository to your drive. Then open a terminal,
-go into the cloned directory, and execute the command:</p>
+<hr class="docutils" />
+<div class="section" id="via-pip">
+<h2>Via pip<a class="headerlink" href="#via-pip" title="Permalink to this headline">¶</a></h2>
+<p>To install EQSN via pip: <code class="code docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">eqsn</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are using EQSN for the QuNetSim simulator, you do not need to install
+EQSN manually. The appropriate version is installed as a dependency of QuNetSim.</p>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="from-source">
+<h2>From source<a class="headerlink" href="#from-source" title="Permalink to this headline">¶</a></h2>
+<p>To install EQSN from the source code, clone the repository to your drive.
+Then open a terminal, go into the cloned directory, and execute following command:</p>
 <p><code class="docutils literal notranslate"><span class="pre">`</span>
 <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span>
 <span class="pre">`</span></code></p>
 <p>Afterwards, the EQSN package is installed on your system.</p>
+</div>
 </div>
 
 

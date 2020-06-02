@@ -1,0 +1,345 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Qubit Thread &mdash; EQSN  documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="_static/favicon.png"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="Worker Process" href="processes.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> EQSN
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#via-pip">Via pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#from-source">From source</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="design.html">Design Overview</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="gates.html">Gates Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processes.html">Worker Process</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Qubit Thread</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/create_and_measure.html">Create Qubit and Measure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/epr_creation.html">EPR State Creation</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">EQSN</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="design.html">Design Overview</a> &raquo;</li>
+        
+      <li>Qubit Thread</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/qubit_thread.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="qubit-thread">
+<h1>Qubit Thread<a class="headerlink" href="#qubit-thread" title="Permalink to this headline">¶</a></h1>
+<p>A qubit thread object contains a list of qubits and there statevectors. The class
+provides functionality for manipulating the qubits, such as measuring them or
+applying gates.</p>
+<span class="target" id="module-eqsn.qubit_thread"></span><dl class="py class">
+<dt id="eqsn.qubit_thread.QubitThread">
+<em class="property">class </em><code class="sig-prename descclassname">eqsn.qubit_thread.</code><code class="sig-name descname">QubitThread</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em>, <em class="sig-param"><span class="n">queue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.qubit_thread.QubitThread" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Qubit thread is the smallest object in EQSN.
+It consists of a statevector and the Qubit IDs of the state vector.
+Most operations here can be applid asynchronously.</p>
+<dl class="py method">
+<dt id="eqsn.qubit_thread.QubitThread.apply_controlled_gate">
+<code class="sig-name descname">apply_controlled_gate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mat</span></em>, <em class="sig-param"><span class="n">q_id1</span></em>, <em class="sig-param"><span class="n">q_id2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.qubit_thread.QubitThread.apply_controlled_gate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies a controlled gate to q_id1</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.qubit_thread.QubitThread.apply_single_gate">
+<code class="sig-name descname">apply_single_gate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gate</span></em>, <em class="sig-param"><span class="n">q_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.qubit_thread.QubitThread.apply_single_gate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applys a single gate to a qubit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gate</strong> (<em>np.array</em>) – 2x2 unitary array.</p></li>
+<li><p><strong>id</strong> (<em>String</em>) – Qubit on which the gate should be applied to.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.qubit_thread.QubitThread.apply_two_qubit_gate">
+<code class="sig-name descname">apply_two_qubit_gate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gate</span></em>, <em class="sig-param"><span class="n">q_id1</span></em>, <em class="sig-param"><span class="n">q_id2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.qubit_thread.QubitThread.apply_two_qubit_gate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies a two qubit gate to the statevector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gate</strong> (<em>np.ndarray</em>) – 4x4 unitary matrix</p></li>
+<li><p><strong>q_id1</strong> (<em>String</em>) – First qubit id.</p></li>
+<li><p><strong>q_id2</strong> (<em>String</em>) – Second qubit id.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.qubit_thread.QubitThread.give_statevector">
+<code class="sig-name descname">give_statevector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.qubit_thread.QubitThread.give_statevector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends the Qubit IDs and their state vectors over a channel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>channel</strong> (<em>Queue</em>) – Channel to return the requested data to.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.qubit_thread.QubitThread.measure">
+<code class="sig-name descname">measure</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em>, <em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.qubit_thread.QubitThread.measure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a destructive measurement on qubit with the id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q_id</strong> (<em>String</em>) – ID of the Qubit to measure.</p></li>
+<li><p><strong>channel</strong> (<em>Queue</em>) – Channel to transmit measurement result to.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.qubit_thread.QubitThread.measure_non_destructive">
+<code class="sig-name descname">measure_non_destructive</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id</span></em>, <em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.qubit_thread.QubitThread.measure_non_destructive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a non destructive measurement on qubit with the id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q_id</strong> (<em>String</em>) – ID of the Qubit to measure.</p></li>
+<li><p><strong>channel</strong> (<em>Queue</em>) – Channel to transmit measurement result to.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.qubit_thread.QubitThread.merge_accept">
+<code class="sig-name descname">merge_accept</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.qubit_thread.QubitThread.merge_accept" title="Permalink to this definition">¶</a></dt>
+<dd><p>Receive the statevector and qubit information of another
+thread with this thread and merge the vectors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>channel</strong> (<em>Queue</em>) – channel to receive qubit ids and statevectors from.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.qubit_thread.QubitThread.merge_send">
+<code class="sig-name descname">merge_send</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">chanel2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.qubit_thread.QubitThread.merge_send" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send own process data to another process and suicide.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<em>Queue</em>) – Channel to send own data to other Qubit Thread.</p></li>
+<li><p><strong>channel2</strong> (<em>Queue</em>) – Channel to send qubit ids to parent, to update
+the qubit ids in its dictionary.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.qubit_thread.QubitThread.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.qubit_thread.QubitThread.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run in loop and wait to receive tasks to perform.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="eqsn.qubit_thread.QubitThread.swap_qubits">
+<code class="sig-name descname">swap_qubits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_id1</span></em>, <em class="sig-param"><span class="n">q_id2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#eqsn.qubit_thread.QubitThread.swap_qubits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Swaps the position of qubit q_id1 with q_id2
+in the statevector.</p>
+<p>q_id1(String): Qubit id of one of the qubits to swap.
+q_id2(String): Qubit id of the other qubit to swap.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Benjamin Zanger, Stephen DiAdamo, Janis Nötzel
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

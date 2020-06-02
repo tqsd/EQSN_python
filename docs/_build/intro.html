@@ -23,10 +23,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -89,7 +89,17 @@
               <p class="caption"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#via-pip">Via pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#from-source">From source</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="design.html">Design Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gates.html">Gates Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processes.html">Worker Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="qubit_thread.html">Qubit Thread</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="examples/create_and_measure.html">Create Qubit and Measure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/epr_creation.html">EPR State Creation</a></li>
@@ -165,9 +175,10 @@
 QuNetSim, but can also be used as a standalone library.</p>
 <p>At the moment, EQSN is still under development and might be buggy. If you
 find any bugs, please open a issue on the github page.</p>
-<p>The EQSN API is intended to be threadsafe. A new Qubit is created in its own
-process. As soon as a two qubit gate is applied, the qubits are merged into one
-process and their starevector is merges, using the kronecker product.</p>
+<p>The EQSN API is intended to be threadsafe. A new qubit is created in a thread,
+parented by a parent process. As soon as a two qubit gate is applied, the
+qubits are merged into one
+thread and their statevector is merged.</p>
 <p>Gates and other commands are send over process channels to the qubits.</p>
 </div>
 

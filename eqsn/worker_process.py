@@ -10,8 +10,16 @@ from eqsn.qubit_thread import SINGLE_GATE, MERGE_SEND, MERGE_ACCEPT, MEASURE,\
 
 
 class WorkerProcess(object):
+    """
+    Object to control a Process. Intermediate object to apply operations to the
+    Qubits which are running on this Process.
+    """
 
     def __init__(self, queue):
+        """
+        Args:
+            queue (Queue): Queue for receiving commands from main Process.
+        """
         self.queue = queue
 
     def run(self):
@@ -66,6 +74,13 @@ class WorkerProcess(object):
         logging.debug("Created new qubit with id %s.", q_id)
 
     def measure(self, q_id, channel):
+        """
+        Perform a destructive measurement on qubit with the id.
+
+        Args:
+            q_id(String): ID of the Qubit to measure.
+            channel(Queue): Channel to transmit measurement result to.
+        """
         temp_queue = Queue()
         q = self.shared_dict.get_queues_for_ids([q_id])[0]
         q.put([MEASURE, q_id, temp_queue])
@@ -74,10 +89,20 @@ class WorkerProcess(object):
         self.shared_dict.delete_id_and_check_to_join_thread(q_id)
 
     def measure_non_destructive(self, q_id, channel):
+        """
+        Perform a non destructive measurement on qubit with the id.
+
+        Args:
+            q_id(String): ID of the Qubit to measure.
+            channel(Queue): Channel to transmit measurement result to.
+        """
         q = self.shared_dict.get_queues_for_ids([q_id])[0]
         q.put([MEASURE_NON_DESTRUCTIVE, q_id, channel])
 
     def add_merged_qubits_to_thread(self, q_id, qubits):
+        """
+        Add new Qubits from a merge to the dictionary.
+        """
         q, t = self.shared_dict.get_queues_and_threads_for_ids([q_id])[0]
         for qubit in qubits:
             self.shared_dict.set_thread_with_id(qubit, t, q)
@@ -91,18 +116,37 @@ class WorkerProcess(object):
         self.shared_dict.stop_shared_dict()
 
     def apply_two_qubit_gate(self, gate, q_id1, q_id2):
+        """
+        Applies a two qubit gate to a thread.
+
+        Args:
+            gate(np.ndarray): 4x4 unitary matrix
+            q_id1(String): First qubit id.
+            q_id2(String): Second qubit id.
+        """
         self.merge_qubits(q_id1, q_id2)
         q = self.shared_dict.get_queues_for_ids([q_id1])[0]
         q.put([DOUBLE_GATE, gate, q_id1, q_id2])
 
     def apply_single_gate(self, gate, q_id):
         """
-        Applies a single gate to a Qubit.
+        Applys a single gate to a qubit.
+
+        Args:
+            gate (np.array): 2x2 unitary array.
+            id (String): Qubit on which the gate should be applied to.
         """
         q = self.shared_dict.get_queues_for_ids([q_id])[0]
         q.put([SINGLE_GATE, gate, q_id])
 
     def give_statevector_for(self, q_id, channel):
+        """
+        Sends the Qubit IDs and their state vectors over a channel.
+
+        Args:
+            q_id(String): ID of the Qubit of the state vector to be returned.
+            channel(Queue): Channel to return the requested data to.
+        """
         q = self.shared_dict.get_queues_for_ids([q_id])[0]
         q.put([GIVE_STATEVECTOR, channel])
 
@@ -131,6 +175,13 @@ class WorkerProcess(object):
         queue2.put(qubits)
 
     def merge_accept(self, q_id, queue):
+        """
+        Handle a merge accept.
+
+        Args:
+            q_id(String): ID of the qubit which should accept the merge.
+            channel(Queue): channel to receive qubit ids and statevectors from.
+        """
         q = self.shared_dict.get_queues_for_ids([q_id])[0]
         q.put([MERGE_ACCEPT, queue])
 

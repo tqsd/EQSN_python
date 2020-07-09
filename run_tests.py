@@ -25,9 +25,12 @@ if __name__ == "__main__":
             continue
         path, filename = os.path.split(f)
         with cd(path):
+            print('Testing %s' % filename)
             exitcode = os.system("python %s" % filename)
             if exitcode != 0:
-                assert False, "Testfile %s was not successful!" % f
+                assert False, "Testing %s was not successful!" % f
             else:
-                print("Testfile %s was successful!" % f)
+                print("Testing %s was successful!" % filename)
+
     print('Done tests')
+    exit(0)

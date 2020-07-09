@@ -95,6 +95,7 @@ def test_custom_two_qubit_control_gate_control_ccnot():
 
 def test_custom_two_qubit_control_gate_other_qubits_not_affected():
     eqsn = EQSN()
+
     eqsn.new_qubit("400")
     eqsn.new_qubit("200")
     eqsn.new_qubit("300")

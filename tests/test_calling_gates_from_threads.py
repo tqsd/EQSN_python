@@ -22,11 +22,10 @@ def test_call_single_qubit_gate_from_threads():
     for t in thread_list:
         t.join()
     m = q_sim.measure(id1)
-    print("Measured %d." % m)
     assert m == 1
-    print("Test was successfull!")
     q_sim.stop_all()
 
 
 if __name__ == "__main__":
     test_call_single_qubit_gate_from_threads()
+    exit(0)

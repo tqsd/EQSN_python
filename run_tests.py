@@ -20,9 +20,7 @@ class cd:
 
 if __name__ == "__main__":
     files = [f for f in glob.glob("./tests/**/*.py")] + [f for f in glob.glob("./tests/*.py")]
-    print(files)
     for f in files:
-        print("Start with " + str(f))
         if f in ignore:
             continue
         path, filename = os.path.split(f)
@@ -30,3 +28,6 @@ if __name__ == "__main__":
             exitcode = os.system("python %s" % filename)
             if exitcode != 0:
                 assert False, "Testfile %s was not successful!" % f
+            else:
+                print("Testfile %s was successful!" % f)
+    print('Done tests')

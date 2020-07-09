@@ -12,9 +12,7 @@ def test_epr_creation():
     q_sim.cnot_gate(id1, id2)
     m1 = q_sim.measure(id1)
     m2 = q_sim.measure(id2)
-    print("measured %d and %d." % (m1, m2))
     assert m1 == m2
-    print("Test was successfull!")
     q_sim.stop_all()
 
 
@@ -30,8 +28,7 @@ def test_5_qubits_gate():
     q_sim.cnot_gate(ids[3], ids[2])
     q_sim.cnot_gate(ids[4], ids[3])
     for i in ids:
-        m = q_sim.measure(i)
-        print("Qubit %s was %d." % (i, m))
+        q_sim.measure(i)
     q_sim.stop_all()
 
 
@@ -39,3 +36,4 @@ if __name__ == "__main__":
     test_epr_creation()
     time.sleep(0.05)
     test_5_qubits_gate()
+    exit(0)

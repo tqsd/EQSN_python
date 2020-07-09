@@ -133,7 +133,7 @@ if __name__ == "__main__":
         test_custom_two_qubit_control_gate_control_applied,
         test_custom_two_qubit_control_gate_control_not_applied,
         test_custom_two_qubit_control_gate_control_ccnot,
-        # test_custom_two_qubit_control_gate_other_qubits_not_affected
+        test_custom_two_qubit_control_gate_other_qubits_not_affected
     ]
 
     for func in test_list:

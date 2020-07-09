@@ -19,18 +19,18 @@ class cd:
 
 
 if __name__ == "__main__":
-    # files = [f for f in glob.glob("./tests/**/*.py")] + [f for f in glob.glob("./tests/*.py")]
-    # for f in files:
-    #     if f in ignore:
-    #         continue
-    #     path, filename = os.path.split(f)
-    #     with cd(path):
-    #         print('Testing %s' % filename)
-    #         exitcode = os.system("python %s" % filename)
-    #         if exitcode != 0:
-    #             assert False, "Testing %s was not successful!" % f
-    #         else:
-    #             print("Testing %s was successful!" % filename)
+    files = [f for f in glob.glob("./tests/**/*.py")] + [f for f in glob.glob("./tests/*.py")]
+    for f in files:
+        if f in ignore:
+            continue
+        path, filename = os.path.split(f)
+        with cd(path):
+            print('Testing %s' % filename)
+            exitcode = os.system("python %s" % filename)
+            if exitcode != 0:
+                assert False, "Testing %s was not successful!" % f
+            else:
+                print("Testing %s was successful!" % filename)
 
     print('Done tests')
     exit(0)

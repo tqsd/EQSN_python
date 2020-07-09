@@ -296,6 +296,6 @@ class SharedDict(object):
 
     def stop_shared_dict(self):
         """
-        Releases the dicionary object.
+        Releases the dictionary object.
         """
         SharedDict.__instance = None

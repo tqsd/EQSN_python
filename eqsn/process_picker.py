@@ -11,7 +11,7 @@ class ProcessPicker(object):
         a new object o the class is created.
 
         Args:
-            cpu_count(int): The amount of CPU cores.
+            amount_processes (int): The amount of processes.
             process_queue_list(List): A List of all Processes.
         """
         if ProcessPicker.__instance is None:

@@ -1,9 +1,9 @@
 import multiprocessing
 import logging
 import numpy as np
-from eqsn.qubit_thread import SINGLE_GATE, MERGE_SEND, MERGE_ACCEPT, MEASURE,\
-                MEASURE_NON_DESTRUCTIVE, GIVE_STATEVECTOR, DOUBLE_GATE, \
-                CONTROLLED_GATE, NEW_QUBIT, ADD_MERGED_QUBITS_TO_DICT
+from eqsn.qubit_thread import SINGLE_GATE, MERGE_SEND, MERGE_ACCEPT, MEASURE, \
+    MEASURE_NON_DESTRUCTIVE, GIVE_STATEVECTOR, DOUBLE_GATE, \
+    CONTROLLED_GATE, NEW_QUBIT, ADD_MERGED_QUBITS_TO_DICT, CONTROLLED_TWO_GATE
 from eqsn.shared_dict import SharedDict
 from eqsn.worker_process import WorkerProcess
 from eqsn.process_picker import ProcessPicker
@@ -139,7 +139,7 @@ class EQSN(object):
         Args:
             q_id(String): ID of the Qubit to apply the gate to.
         """
-        x = 0.5 * np.array([[1+1j, 1-1j], [-1+1j, -1-1j]], dtype=np.csingle)
+        x = 0.5 * np.array([[1 + 1j, 1 - 1j], [-1 + 1j, -1 - 1j]], dtype=np.csingle)
         q = self.shared_dict.get_queues_for_ids([q_id])[0]
         q.put([SINGLE_GATE, x, q_id])
 
@@ -205,15 +205,15 @@ class EQSN(object):
             q_id1 (String): Id of the Qubit merged into q_id2.
             q_id2 (String): Id of the Qubit merged with q_id1.
         """
-        l = self.shared_dict.get_queues_for_ids([q_id1, q_id2])
-        if len(l) == 1:
+        queues = self.shared_dict.get_queues_for_ids([q_id1, q_id2])
+        if len(queues) == 1:
             return  # Already merged
         else:
             # Block the dictionary, that noone can send commands to the qubits,
             logging.debug("Merge Qubits %s and %s.", q_id1, q_id2)
             self.shared_dict.block_shared_dict()
-            q1 = l[0]
-            q2 = l[1]
+            q1 = queues[0]
+            q2 = queues[1]
             merge_q = self.manager.Queue()
             qubits_q = self.manager.Queue()
             q1.put([MERGE_SEND, q_id1, merge_q, qubits_q])
@@ -282,6 +282,22 @@ class EQSN(object):
         self.merge_qubits(q_id1, q_id2)
         q = self.shared_dict.get_queues_for_ids([q_id1])[0]
         q.put([DOUBLE_GATE, gate, q_id1, q_id2])
+
+    def custom_two_qubit_control_gate(self, q_id1, q_id2, q_id3, gate):
+        """
+        Applies a two Qubit gate to two Qubits.
+
+        Args:
+            q_id1 (String): ID of the first Qubit of the gate.
+            q_id2 (String): ID of the second Qubit of the gate.
+            q_id3 (String): ID of the third Qubit of the gate.
+            gate(np.ndarray): 4x4 unitary matrix gate.
+        """
+        self.merge_qubits(q_id1, q_id2)
+        self.merge_qubits(q_id1, q_id3)
+
+        q = self.shared_dict.get_queues_for_ids([q_id1])[0]
+        q.put([CONTROLLED_TWO_GATE, gate, q_id1, q_id2, q_id3])
 
     def custom_controlled_gate(self, applied_to_id, controlled_by_id, gate):
         """

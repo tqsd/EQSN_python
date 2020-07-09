@@ -2,7 +2,6 @@ import numpy as np
 import logging
 from copy import deepcopy as dp
 import random
-import sys
 
 NONE = 0
 SINGLE_GATE = 1
@@ -15,6 +14,7 @@ NEW_QUBIT = 8
 ADD_MERGED_QUBITS_TO_DICT = 9
 GIVE_STATEVECTOR = 10
 DOUBLE_GATE = 11
+CONTROLLED_TWO_GATE = 12
 
 
 class QubitThread(object):
@@ -71,30 +71,36 @@ class QubitThread(object):
         Sends the Qubit IDs and their state vectors over a channel.
 
         Args:
-            channel(Queue): Channel to return the requested data to.
+            channel (Queue): Channel to return the requested data to.
         """
         channel.put((dp(self.qubits), dp(self.qubit)))
 
     def apply_controlled_gate(self, mat, q_id1, q_id2):
         """
         Applies a controlled gate to q_id1
+
+        Args:
+            mat (np.ndarray): The matrix to apply
+            q_id1 (str): The target qubit id
+            q_id2 (str): The control qubit id
         """
         first_mat = 1
         second_mat = 1
         nr1 = self.qubits.index(q_id1)
         nr2 = self.qubits.index(q_id2)
+
         min_nr = min(nr1, nr2)
         max_nr = max(nr1, nr2)
-        if min_nr == nr1:
-            # first_mat = mat
-            pass
+
         total_amount = len(self.qubits)
         before = min_nr
         after = total_amount - max_nr - 1
         mid = total_amount - before - after - 2
+
         if before > 0:
             first_mat = np.eye(2 ** before)
             second_mat = np.eye(2 ** before)
+
         # Apply first part of Matrix
         if min_nr == nr1:
             first_mat = np.kron(first_mat, np.eye(2))
@@ -106,6 +112,7 @@ class QubitThread(object):
         if mid > 0:
             first_mat = np.kron(first_mat, np.eye(2 ** mid))
             second_mat = np.kron(second_mat, np.eye(2 ** mid))
+
         # Apply second part of Matrix
         if min_nr == nr1:
             first_mat = np.kron(first_mat, np.array([[1, 0], [0, 0]]))
@@ -117,6 +124,7 @@ class QubitThread(object):
         if after > 0:
             first_mat = np.kron(first_mat, np.eye(2 ** after))
             second_mat = np.kron(second_mat, np.eye(2 ** after))
+
         apply_mat = first_mat + second_mat
         self.qubit = np.dot(apply_mat, self.qubit)
 
@@ -134,7 +142,7 @@ class QubitThread(object):
         self.qubit = np.kron(self.qubit, vector)
         logging.debug("Qubit Thread merged, new qubits are %r", self.qubits)
 
-    def merge_send(self, channel, chanel2):
+    def merge_send(self, channel, channel2):
         """
         Send own process data to another process and suicide.
 
@@ -145,20 +153,21 @@ class QubitThread(object):
         """
         channel.put(dp(self.qubits))
         channel.put(dp(self.qubit))
-        chanel2.put(dp(self.qubits))
+        channel2.put(dp(self.qubits))
         return
 
     def swap_qubits(self, q_id1, q_id2):
         """
         Swaps the position of qubit q_id1 with q_id2
-        in the statevector.
+        in the state vector.
 
         q_id1(String): Qubit id of one of the qubits to swap.
         q_id2(String): Qubit id of the other qubit to swap.
         """
-        def cnot(q_id1, q_id2):
+
+        def cnot(_q_id1, _q_id2):
             mat = np.asarray([[0, 1], [1, 0]])
-            self.apply_controlled_gate(mat, q_id1, q_id2)
+            self.apply_controlled_gate(mat, _q_id1, _q_id2)
 
         # Check if they are the same ids
         if q_id1 == q_id2:
@@ -173,9 +182,28 @@ class QubitThread(object):
         i2 = self.qubits.index(q_id2)
         self.qubits[i1], self.qubits[i2] = self.qubits[i2], self.qubits[i1]
 
+    def apply_controlled_two_qubit_gate(self, mat, q_id1, q_id2, q_id3):
+        """
+        Applies a 3 qubit controlled gate
+        Args:
+            mat (np.ndarray): The 4x4 unitary gate to apply
+            q_id1 (str): The control qubit
+            q_id2 (str): A target qubit
+            q_id3 (str): A target qubit
+        """
+        # Move the qubits to the correct position
+        self.swap_qubits(q_id1, self.qubits[0])
+        self.swap_qubits(q_id2, self.qubits[1])
+        self.swap_qubits(q_id3, self.qubits[2])
+
+        first_mat = np.block([[np.eye(4), np.zeros((4, 4))], [np.zeros((4, 4)), mat]])
+        total_mat = np.kron(first_mat, np.eye(2 ** (len(self.qubits) - 3)))
+
+        self.qubit = np.dot(total_mat, self.qubit)
+
     def apply_two_qubit_gate(self, gate, q_id1, q_id2):
         """
-        Applies a two qubit gate to the statevector.
+        Applies a two qubit gate to the state vector.
 
         Args:
             gate(np.ndarray): 4x4 unitary matrix
@@ -185,11 +213,12 @@ class QubitThread(object):
         # Bring the qubits in the right order
         i2 = self.qubits.index(q_id2)
         if i2 > 0:
-            new_i1 = i2-1
+            new_i1 = i2 - 1
             self.swap_qubits(q_id1, self.qubits[new_i1])
         else:
             self.swap_qubits(q_id1, self.qubits[0])
             self.swap_qubits(q_id2, self.qubits[1])
+
         apply_mat = gate
         nr1 = self.qubits.index(q_id1)
         total_amount = len(self.qubits)
@@ -309,6 +338,8 @@ class QubitThread(object):
                 self.apply_single_gate(item[1], item[2])
             elif item[0] == CONTROLLED_GATE:
                 self.apply_controlled_gate(item[1], item[2], item[3])
+            elif item[0] == CONTROLLED_TWO_GATE:
+                self.apply_controlled_two_qubit_gate(item[1], item[2], item[3], item[4])
             elif item[0] == MEASURE:
                 self.measure(item[1], item[2])
                 # no qubit left, terminate

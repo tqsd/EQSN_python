@@ -244,10 +244,10 @@ class EQSN(object):
         q_id1 and controlled by q_id2.
 
         Args:
-            applied_to_id (String): Id of the Qubit on which the X gate is applied.
+            applied_to_id (String): Id of the Qubit on which the Z gate is applied.
             controlled_by_id (String): Id of the Qubit which controls the gate.
         """
-        x = np.array([[0, 1], [0, -1]], dtype=np.csingle)
+        x = np.array([[1, 0], [0, -1]], dtype=np.csingle)
         self.merge_qubits(applied_to_id, controlled_by_id)
         q = self.shared_dict.get_queues_for_ids([applied_to_id])[0]
         q.put([CONTROLLED_GATE, x, applied_to_id, controlled_by_id])

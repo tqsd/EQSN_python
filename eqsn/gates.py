@@ -244,7 +244,7 @@ class EQSN(object):
         q_id1 and controlled by q_id2.
 
         Args:
-            applied_to_id (String): Id of the Qubit on which the X gate is applied.
+            applied_to_id (String): Id of the Qubit on which the Z gate is applied.
             controlled_by_id (String): Id of the Qubit which controls the gate.
         """
         x = np.array([[1, 0], [0, -1]], dtype=np.csingle)
